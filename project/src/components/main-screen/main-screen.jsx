@@ -136,8 +136,8 @@ function MainScreen({promoFilm, films}) {
 }
 
 MainScreen.propTypes = {
-  promoFilm: PropTypes.object,
-  films: PropTypes.arrayOf(PropTypes.object),
+  promoFilm: PropTypes.object.isRequired,
+  films: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default MainScreen;

@@ -17,7 +17,7 @@ function SmallFilmCard({film}) {
 }
 
 SmallFilmCard.propTypes = {
-  film: PropTypes.object,
+  film: PropTypes.object.isRequired,
 };
 
 export default SmallFilmCard;

@@ -12,8 +12,8 @@ function App({promoFilm, films}) {
 }
 
 App.propTypes = {
-  promoFilm: PropTypes.object,
-  films: PropTypes.arrayOf(PropTypes.object),
+  promoFilm: PropTypes.object.isRequired,
+  films: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default App;

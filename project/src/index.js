@@ -55,13 +55,13 @@ const PROMO_FILM = {
   src: 'img/the-grand-budapest-hotel-poster.jpg',
 };
 
-const FILMS = FILMS_TITLES.map((title, i) => ({title, src: FILMS_IMAGES[i]}));
+const films = FILMS_TITLES.map((title, i) => ({title, src: FILMS_IMAGES[i]}));
 
 ReactDOM.render(
   <React.StrictMode>
     <App
       promoFilm={PROMO_FILM}
-      films={FILMS}
+      films={films}
     />
   </React.StrictMode>,
   document.getElementById('root'),

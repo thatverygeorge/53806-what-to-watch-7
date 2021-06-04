@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 function SmallFilmCard({film}) {
@@ -10,7 +11,7 @@ function SmallFilmCard({film}) {
         <img src={src} alt={title} width="280" height="175" />
       </div>
       <h3 className="small-film-card__title">
-        <a className="small-film-card__link" href="film-page.html">{title}</a>
+        <Link className="small-film-card__link" to="/films/1">{title}</Link>
       </h3>
     </article>
   );

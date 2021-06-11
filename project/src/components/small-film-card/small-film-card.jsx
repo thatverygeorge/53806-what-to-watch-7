@@ -1,24 +1,36 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import filmProp from '../film-screen/film.prop';
 
-function SmallFilmCard({film}) {
-  const {title, src} = film;
+function SmallFilmCard(props) {
+  const {film, handleHover} = props;
 
   return (
-    <article className="small-film-card catalog__films-card">
+    <article className="small-film-card catalog__films-card" onMouseEnter={()=> handleHover(film)}>
       <div className="small-film-card__image">
-        <img src={src} alt={title} width="280" height="175" />
+        <img src={film.previewImage} alt={film.name} width="280" height="175" />
       </div>
       <h3 className="small-film-card__title">
-        <Link className="small-film-card__link" to="/films/1">{title}</Link>
+        <Link
+          className="small-film-card__link"
+          to={{
+            pathname: `/films/${film.id}`,
+            state: {
+              film: film,
+            },
+          }}
+        >
+          {film.name}
+        </Link>
       </h3>
     </article>
   );
 }
 
 SmallFilmCard.propTypes = {
-  film: PropTypes.object.isRequired,
+  film: filmProp,
+  handleHover: PropTypes.func.isRequired,
 };
 
 export default SmallFilmCard;

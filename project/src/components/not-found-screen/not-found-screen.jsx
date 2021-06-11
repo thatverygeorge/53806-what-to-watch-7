@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom';
 
 function NotFoundScreen() {
   return (
-    <section className="game__screen">
+    <section style={{ marginTop: '150px', textAlign: 'center' }}>
       <h1>404. Page not found</h1>
-      <Link to="/">Вернуться на главную</Link>
+      <Link to="/">Go to the main page</Link>
     </section>
   );
 }

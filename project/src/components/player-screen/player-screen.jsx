@@ -1,19 +1,32 @@
 import React from 'react';
+import {AppRoute} from '../../const';
+import {useHistory, useLocation} from 'react-router-dom';
 
 function PlayerScreen() {
+  const history = useHistory();
+  const location = useLocation();
+  const {film} = location.state;
+
+  function formatRunTime(runTime) {
+    const hours = Math.floor(runTime / 60);
+    const minutes = runTime % 60 !== 0 ? runTime % 60 : '00';
+
+    return `${hours}:${minutes}`;
+  }
+
   return (
     <div className="player">
-      <video src="#" className="player__video" poster="img/player-poster.jpg"></video>
+      <video src={film.videoLink} className="player__video" poster={film.posterImage}></video>
 
-      <button type="button" className="player__exit">Exit</button>
+      <button type="button" className="player__exit" onClick={() => history.push(AppRoute.MAIN)}>Exit</button>
 
       <div className="player__controls">
         <div className="player__controls-row">
           <div className="player__time">
-            <progress className="player__progress" value="30" max="100"></progress>
-            <div className="player__toggler" style={{ left: '30%' }}>Toggler</div>
+            <progress className="player__progress" value="0" max="100"></progress>
+            <div className="player__toggler">Toggler</div>
           </div>
-          <div className="player__time-value">1:30:29</div>
+          <div className="player__time-value">{formatRunTime(film.runTime)}</div>
         </div>
 
         <div className="player__controls-row">
@@ -23,7 +36,7 @@ function PlayerScreen() {
             </svg>
             <span>Play</span>
           </button>
-          <div className="player__name">Transpotting</div>
+          <div className="player__name">{film.name}</div>
 
           <button type="button" className="player__full-screen">
             <svg viewBox="0 0 27 27" width="27" height="27">

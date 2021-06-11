@@ -1,20 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import SmallFilmCard from '../small-film-card/small-film-card';
+import FilmsList from '../films-list/films-list';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
+import ButtonPlay from '../button-play/button-play';
+import filmProp from '../film-screen/film.prop';
 
-function MainScreen({promoFilm, films}) {
-  const {title, genre, year, src} = promoFilm;
-  const promoFilmAlt = `${title} poster`;
+function MainScreen(props) {
+  const {films} = props;
+  const promoFilm = films[0];
 
   return (
     <>
       <section className="film-card">
         <div className="film-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+          <img src={promoFilm.backgroundImage} alt={promoFilm.name} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -28,23 +30,18 @@ function MainScreen({promoFilm, films}) {
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src={src} alt={promoFilmAlt}  width="218" height="327" />
+              <img src={promoFilm.posterImage} alt={`${promoFilm.name} poster`} width="218" height="327" />
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{title}</h2>
+              <h2 className="film-card__title">{promoFilm.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{genre}</span>
-                <span className="film-card__year">{year}</span>
+                <span className="film-card__genre">{promoFilm.genre}</span>
+                <span className="film-card__year">{promoFilm.released}</span>
               </p>
 
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
+                <ButtonPlay film={promoFilm} />
                 <button className="btn btn--list film-card__button" type="button">
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref="#add"></use>
@@ -94,12 +91,7 @@ function MainScreen({promoFilm, films}) {
             </li>
           </ul>
 
-          <div className="catalog__films-list">
-            {films.map((film, i) => {
-              const key = `${film.src.slice(4, -4)} - ${i}`;
-              return <SmallFilmCard key={key} film={film} />;
-            })}
-          </div>
+          <FilmsList films={films.slice(1)} />
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
@@ -113,8 +105,9 @@ function MainScreen({promoFilm, films}) {
 }
 
 MainScreen.propTypes = {
-  promoFilm: PropTypes.object.isRequired,
-  films: PropTypes.arrayOf(PropTypes.object).isRequired,
+  films: PropTypes.arrayOf(
+    filmProp,
+  ),
 };
 
 export default MainScreen;

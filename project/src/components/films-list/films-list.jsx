@@ -5,7 +5,7 @@ import SmallFilmCard from '../small-film-card/small-film-card';
 import filmProp from '../film-screen/film.prop';
 
 function FilmsList(props) {
-  const {films} = props;
+  const {films, handleClick} = props;
   const [filmID, setFilmID] = useState(0);
 
   function handleHover(film) {
@@ -18,16 +18,7 @@ function FilmsList(props) {
 
   return (
     <div className="catalog__films-list">
-      {films.map((film, i) => {
-        const key = `${film.previewImage.slice(4, -4)} - ${i}`;
-        return (
-          <SmallFilmCard
-            key={key}
-            film={film}
-            handleHover={handleHover}
-          />
-        );
-      })}
+      {films.map((film) => <SmallFilmCard key={film.id} film={film} handleHover={handleHover} handleClick={handleClick} />)}
     </div>
   );
 }
@@ -36,6 +27,7 @@ FilmsList.propTypes = {
   films: PropTypes.arrayOf(
     filmProp,
   ),
+  handleClick: PropTypes.func,
 };
 
 export default FilmsList;

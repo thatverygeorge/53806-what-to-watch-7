@@ -1,17 +1,18 @@
 import React from 'react';
 import {AppRoute} from '../../const';
-import {useHistory, useLocation} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import films from '../../mocks/films';
 
 function PlayerScreen() {
   const history = useHistory();
-  const location = useLocation();
-  const {film} = location.state;
+  const filmID = parseInt(history.location.pathname.split('/')[2], 10);
+  const film = films.find((currentFilm) => currentFilm.id === filmID);
 
   function formatRunTime(runTime) {
     const hours = Math.floor(runTime / 60);
     const minutes = runTime % 60 !== 0 ? runTime % 60 : '00';
 
-    return `${hours}:${minutes}`;
+    return hours !== 0 ? `${hours}:${minutes}:00` : `${minutes}:00`;
   }
 
   return (

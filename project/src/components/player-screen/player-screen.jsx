@@ -17,7 +17,7 @@ function PlayerScreen() {
 
   return (
     <div className="player">
-      <video src={film.videoLink} className="player__video" poster={film.posterImage}></video>
+      <video src={film.videoLink} className="player__video" poster={film.backgroundImage}></video>
 
       <button type="button" className="player__exit" onClick={() => history.push(AppRoute.MAIN)}>Exit</button>
 

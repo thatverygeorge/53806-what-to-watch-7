@@ -9,11 +9,11 @@ import films from '../../mocks/films';
 
 function FilmScreen() {
   const history = useHistory();
-  const [filmID, setFilmID] = useState(parseInt(history.location.pathname.split('/')[2], 10));
-  const film = films.find((currentFilm) => currentFilm.id === filmID);
+  const [currentFilmID, setCurrentFilmID] = useState(parseInt(history.location.pathname.split('/')[2], 10));
+  const film = films.find((currentFilm) => currentFilm.id === currentFilmID);
 
   function handleClickOnFilm(newFilm) {
-    setFilmID(newFilm.id);
+    setCurrentFilmID(newFilm.id);
   }
 
   function getRatingLevel(rating) {
@@ -113,7 +113,7 @@ function FilmScreen() {
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
 
-          <FilmsList films={films.slice(1, 5)} handleClick={handleClickOnFilm} />
+          <FilmsList films={films.slice(1, 5)} handleClickOnFilm={handleClickOnFilm} />
         </section>
 
         <Footer />

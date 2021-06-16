@@ -1,5 +1,5 @@
-import React from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link, useHistory} from 'react-router-dom';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
@@ -8,8 +8,13 @@ import FilmsList from '../films-list/films-list';
 import films from '../../mocks/films';
 
 function FilmScreen() {
-  const location = useLocation();
-  const {film} = location.state;
+  const history = useHistory();
+  const [currentFilmID, setCurrentFilmID] = useState(parseInt(history.location.pathname.split('/')[2], 10));
+  const film = films.find((currentFilm) => currentFilm.id === currentFilmID);
+
+  function handleClickOnFilm(newFilm) {
+    setCurrentFilmID(newFilm.id);
+  }
 
   function getRatingLevel(rating) {
     if (rating >= 0 && rating < 3) {
@@ -57,17 +62,7 @@ function FilmScreen() {
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link
-                  to={{
-                    pathname: `/films/${film.id}/review`,
-                    state: {
-                      film: film,
-                    },
-                  }}
-                  className="btn film-card__button"
-                >
-                  Add review
-                </Link>
+                <Link to={`/films/${film.id}/review`} className="btn film-card__button">Add review</Link>
               </div>
             </div>
           </div>
@@ -118,7 +113,7 @@ function FilmScreen() {
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
 
-          <FilmsList films={films.slice(1, 5)} />
+          <FilmsList films={films.slice(1, 5)} handleClickOnFilm={handleClickOnFilm} />
         </section>
 
         <Footer />

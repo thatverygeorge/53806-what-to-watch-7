@@ -1,12 +1,14 @@
 import React from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
+import films from '../../mocks/films';
 
 function AddReviewScreen() {
-  const location = useLocation();
-  const {film} = location.state;
+  const history = useHistory();
+  const filmID = parseInt(history.location.pathname.split('/')[2], 10);
+  const film = films.find((currentFilm) => currentFilm.id === filmID);
 
   return (
     <section className="film-card film-card--full">
@@ -23,30 +25,10 @@ function AddReviewScreen() {
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <Link
-                  to={{
-                    pathname: `/films/${film.id}`,
-                    state: {
-                      film: film,
-                    },
-                  }}
-                  className="breadcrumbs__link"
-                >
-                  {film.name}
-                </Link>
+                <Link to={`/films/${film.id}`} className="breadcrumbs__link">{film.name}</Link>
               </li>
               <li className="breadcrumbs__item">
-                <Link
-                  to={{
-                    pathname: `/films/${film.id}/review`,
-                    state: {
-                      film: film,
-                    },
-                  }}
-                  className="breadcrumbs__link" film={film}
-                >
-                  Add review
-                </Link>
+                <Link to={`/films/${film.id}/review`} className="breadcrumbs__link">Add review</Link>
               </li>
             </ul>
           </nav>

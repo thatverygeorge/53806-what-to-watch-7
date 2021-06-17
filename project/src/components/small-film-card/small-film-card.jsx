@@ -5,15 +5,15 @@ import filmProp from '../film-screen/film.prop';
 import VideoPlayer from '../video-player/video-player';
 
 function SmallFilmCard(props) {
-  const {film, activeFilmID, handleHoverOnFilm, handleClickOnFilm} = props;
+  const {film, isActive, handleHoverChange} = props;
 
   return (
-    <article className="small-film-card catalog__films-card" onMouseEnter={()=> handleHoverOnFilm(film.id)} onMouseLeave={()=> handleHoverOnFilm(-1)}>
+    <article className="small-film-card catalog__films-card" onMouseEnter={() => handleHoverChange(film.id)} onMouseLeave={() => handleHoverChange(-1)}>
       <div className="small-film-card__image">
-        {film.id !== activeFilmID ? <img src={film.previewImage} alt={film.name} width="280" height="175" /> : <VideoPlayer film={film} />}
+        {!isActive ? <img src={film.previewImage} alt={film.name} width="280" height="175" /> : <VideoPlayer film={film} />}
       </div>
       <h3 className="small-film-card__title">
-        <Link className="small-film-card__link" to={`/films/${film.id}`} onClick={() => handleClickOnFilm && handleClickOnFilm(film)}>{film.name}</Link>
+        <Link className="small-film-card__link" to={`/films/${film.id}`}>{film.name}</Link>
       </h3>
     </article>
   );
@@ -21,9 +21,8 @@ function SmallFilmCard(props) {
 
 SmallFilmCard.propTypes = {
   film: filmProp,
-  activeFilmID: PropTypes.number.isRequired,
-  handleHoverOnFilm: PropTypes.func.isRequired,
-  handleClickOnFilm: PropTypes.func,
+  isActive: PropTypes.bool.isRequired,
+  handleHoverChange: PropTypes.func.isRequired,
 };
 
 export default SmallFilmCard;

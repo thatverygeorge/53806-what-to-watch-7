@@ -1,14 +1,13 @@
 import React from 'react';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
 import films from '../../mocks/films';
 
 function AddReviewScreen() {
-  const history = useHistory();
-  const filmID = parseInt(history.location.pathname.split('/')[2], 10);
-  const film = films.find((currentFilm) => currentFilm.id === filmID);
+  const {id} = useParams();
+  const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
 
   return (
     <section className="film-card film-card--full">

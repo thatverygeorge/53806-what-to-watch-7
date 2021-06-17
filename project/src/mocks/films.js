@@ -69,7 +69,7 @@ const films = [
     rating: 7.9,
     scoresCount: 472,
     director: 'Bryan Singer',
-    starring: ['Rami Malek', 'Lucy Boynton ', 'Gwilym Lee'],
+    starring: ['Rami Malek', 'Lucy Boynton', 'Gwilym Lee'],
     runTime: 134,
     genre: 'Drama',
     released: 2018,

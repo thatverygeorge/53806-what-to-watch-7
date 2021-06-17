@@ -1,18 +1,22 @@
 import React from 'react';
 import {AppRoute} from '../../const';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import films from '../../mocks/films';
 
 function PlayerScreen() {
   const history = useHistory();
-  const filmID = parseInt(history.location.pathname.split('/')[2], 10);
-  const film = films.find((currentFilm) => currentFilm.id === filmID);
+  const {id} = useParams();
+  const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
 
   function formatRunTime(runTime) {
     const hours = Math.floor(runTime / 60);
-    const minutes = runTime % 60 !== 0 ? runTime % 60 : '00';
+    const minutes = runTime % 60 > 9 ? runTime % 60 : `0${runTime % 60}`;
 
-    return hours !== 0 ? `${hours}:${minutes}:00` : `${minutes}:00`;
+    if (hours === 0) {
+      return `${minutes}:00`;
+    }
+
+    return `${hours}:${minutes}:00`;
   }
 
   return (

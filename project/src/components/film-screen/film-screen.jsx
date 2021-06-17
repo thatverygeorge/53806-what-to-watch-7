@@ -5,25 +5,12 @@ import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
 import FilmsList from '../films-list/films-list';
+import FilmTabs from '../film-tabs/film-tabs';
 import films from '../../mocks/films';
 
 function FilmScreen() {
   const {id} = useParams();
   const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
-
-  function getRatingLevel(rating) {
-    if (rating >= 0 && rating < 3) {
-      return 'Bad';
-    } else if (rating >= 3 && rating < 5) {
-      return 'Normal';
-    } else if (rating >= 5 && rating < 8) {
-      return 'Good';
-    } else if (rating >= 8 && rating < 10) {
-      return 'Very Good';
-    }
-
-    return 'Awesome';
-  }
 
   return (
     <>
@@ -69,37 +56,7 @@ function FilmScreen() {
               <img src={film.posterImage} alt={`${film.name} poster`} width="218" height="327" />
             </div>
 
-            <div className="film-card__desc">
-              <nav className="film-nav film-card__nav">
-                <ul className="film-nav__list">
-                  <li className="film-nav__item film-nav__item--active">
-                    <Link to="/" className="film-nav__link">Overview</Link>
-                  </li>
-                  <li className="film-nav__item">
-                    <Link to="/" className="film-nav__link">Details</Link>
-                  </li>
-                  <li className="film-nav__item">
-                    <Link to="/" className="film-nav__link">Reviews</Link>
-                  </li>
-                </ul>
-              </nav>
-
-              <div className="film-rating">
-                <div className="film-rating__score">{film.rating.toString().replace('.', ',')}</div>
-                <p className="film-rating__meta">
-                  <span className="film-rating__level">{getRatingLevel(film.rating)}</span>
-                  <span className="film-rating__count">{film.scoresCount} ratings</span>
-                </p>
-              </div>
-
-              <div className="film-card__text">
-                <p>{film.description}</p>
-
-                <p className="film-card__director"><strong>Director: {film.director}</strong></p>
-
-                <p className="film-card__starring"><strong>Starring: {film.starring.join(', ')}</strong></p>
-              </div>
-            </div>
+            <FilmTabs film={film} />
           </div>
         </div>
       </section>
@@ -108,7 +65,7 @@ function FilmScreen() {
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
 
-          <FilmsList films={films.slice(1, 5)} />
+          <FilmsList filmToExclude={film} isSimilarGenre />
         </section>
 
         <Footer />

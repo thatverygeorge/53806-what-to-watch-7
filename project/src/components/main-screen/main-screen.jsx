@@ -91,7 +91,7 @@ function MainScreen(props) {
             </li>
           </ul>
 
-          <FilmsList films={films.slice(1)} />
+          <FilmsList filmToExclude={promoFilm} isSimilarGenre={false} />
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>

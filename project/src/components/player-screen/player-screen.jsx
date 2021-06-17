@@ -10,9 +10,13 @@ function PlayerScreen() {
 
   function formatRunTime(runTime) {
     const hours = Math.floor(runTime / 60);
-    const minutes = runTime % 60 !== 0 ? runTime % 60 : '00';
+    const minutes = runTime % 60 > 9 ? runTime % 60 : `0${runTime % 60}`;
 
-    return hours !== 0 ? `${hours}:${minutes}:00` : `${minutes}:00`;
+    if (hours === 0) {
+      return `${minutes}:00`;
+    }
+
+    return `${hours}:${minutes}:00`;
   }
 
   return (

@@ -1,21 +1,18 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import SmallFilmCard from '../small-film-card/small-film-card';
-import films from '../../mocks/films';
 import filmProp from '../film-screen/film.prop';
 
 function FilmsList(props) {
   const [activeFilmID, setActiveFilmID] = useState(-1);
-  const {filmToExclude, isSimilarGenre} = props;
+  const {films, filmToExclude, filmsCount} = props;
 
   function handleHoverChange(id) {
     setActiveFilmID(id);
   }
 
   function getFilms() {
-    return isSimilarGenre ?
-      films.filter((film) => film.genre === filmToExclude.genre && film.name !== filmToExclude.name).slice(0, 4) :
-      films.filter((film) => film.name !== filmToExclude.name);
+    return films.filter((film) => film.name !== filmToExclude.name).slice(0, filmsCount);
   }
 
   return (
@@ -33,7 +30,10 @@ function FilmsList(props) {
 
 FilmsList.propTypes = {
   filmToExclude: filmProp,
-  isSimilarGenre: PropTypes.bool.isRequired,
+  films: PropTypes.arrayOf(
+    filmProp,
+  ),
+  filmsCount: PropTypes.number.isRequired,
 };
 
 export default FilmsList;

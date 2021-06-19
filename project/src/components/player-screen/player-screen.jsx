@@ -1,12 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import filmProp from '../film-screen/film.prop';
 import {AppRoute} from '../../const';
 import {useHistory, useParams} from 'react-router-dom';
-import films from '../../mocks/films';
 import {formatRunTimeForPlayer} from '../../utils';
 
-function PlayerScreen() {
+function PlayerScreen(props) {
   const history = useHistory();
   const {id} = useParams();
+  const {films} = props;
   const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
 
   return (
@@ -44,5 +46,11 @@ function PlayerScreen() {
     </div>
   );
 }
+
+PlayerScreen.propTypes = {
+  films: PropTypes.arrayOf(
+    filmProp,
+  ),
+};
 
 export default PlayerScreen;

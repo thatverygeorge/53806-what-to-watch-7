@@ -35,3 +35,7 @@ export function getRatingLevel(rating) {
 
   return 'Awesome';
 }
+
+export function getFilmsByGenre(films, genre) {
+  return genre === 'All genres' ? films : films.filter((film) => film.genre === genre);
+}

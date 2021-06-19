@@ -30,11 +30,11 @@ function App(props) {
             films={films}
           />
         </Route>
-        <Route exact path={AppRoute.FILM}>
-          <FilmScreen />
-        </Route>
         <Route exact path={AppRoute.ADD_REVIEW}>
           <AddReviewScreen />
+        </Route>
+        <Route exact path={[AppRoute.FILM, AppRoute.FILM_DETAILS, AppRoute.FILM_REVIEWS]}>
+          <FilmScreen />
         </Route>
         <Route exact path={AppRoute.PLAYER}>
           <PlayerScreen />

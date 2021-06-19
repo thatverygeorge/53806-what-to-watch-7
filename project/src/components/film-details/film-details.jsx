@@ -1,27 +1,13 @@
 import React from 'react';
 import filmProp from '../film-screen/film.prop';
+import {formatRunTimeForFilmDetails} from '../../utils';
 
 function FilmDetails(props) {
   const {film} = props;
 
-  function formatRunTime(runTime) {
-    const hours = Math.floor(runTime / 60);
-    const minutes = runTime % 60 > 9 ? runTime % 60 : `0${runTime % 60}`;
-
-    if (hours === 0) {
-      return `${minutes}m`;
-    } else if (minutes === 0 || minutes === '00') {
-      return `${hours}h`;
-    }
-
-    return `${hours}h ${minutes}m`;
-  }
-
   function renderStarring(starring) {
-    return starring.map((star, index, array) => {
-      const key = `${film.id}-${index}`;
-      return index < array.length - 1 ? <React.Fragment key={key}>{`${star}, `}<br /></React.Fragment> : <React.Fragment key={key}>{star}</React.Fragment>;
-    });
+    return starring.map((star, index, array) =>
+      index < array.length - 1 ? <React.Fragment key={star}>{`${star}, `}<br /></React.Fragment> : <React.Fragment key={star}>{star}</React.Fragment>);
   }
 
   return (
@@ -40,7 +26,7 @@ function FilmDetails(props) {
       <div className="film-card__text-col">
         <p className="film-card__details-item">
           <strong className="film-card__details-name">Run Time</strong>
-          <span className="film-card__details-value">{formatRunTime(film.runTime)}</span>
+          <span className="film-card__details-value">{formatRunTimeForFilmDetails(film.runTime)}</span>
         </p>
         <p className="film-card__details-item">
           <strong className="film-card__details-name">Genre</strong>

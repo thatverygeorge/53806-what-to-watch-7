@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import filmProp from '../film-screen/film.prop';
 import {useHistory} from 'react-router-dom';

@@ -1,22 +1,9 @@
 import React from 'react';
 import filmProp from '../film-screen/film.prop';
+import {getRatingLevel} from '../../utils';
 
 function FilmOverview(props) {
   const {film} = props;
-
-  function getRatingLevel(rating) {
-    if (rating >= 0 && rating < 3) {
-      return 'Bad';
-    } else if (rating >= 3 && rating < 5) {
-      return 'Normal';
-    } else if (rating >= 5 && rating < 8) {
-      return 'Good';
-    } else if (rating >= 8 && rating < 10) {
-      return 'Very Good';
-    }
-
-    return 'Awesome';
-  }
 
   return (
     <>

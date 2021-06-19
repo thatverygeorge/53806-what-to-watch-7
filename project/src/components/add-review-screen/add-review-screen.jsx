@@ -1,12 +1,14 @@
 import React from 'react';
 import {Link, useParams} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import filmProp from '../film-screen/film.prop';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
-import films from '../../mocks/films';
 
-function AddReviewScreen() {
+function AddReviewScreen(props) {
   const {id} = useParams();
+  const {films} = props;
   const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
 
   return (
@@ -47,5 +49,11 @@ function AddReviewScreen() {
     </section>
   );
 }
+
+AddReviewScreen.propTypes = {
+  films: PropTypes.arrayOf(
+    filmProp,
+  ),
+};
 
 export default AddReviewScreen;

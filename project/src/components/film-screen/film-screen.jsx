@@ -6,11 +6,15 @@ import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
 import FilmsList from '../films-list/films-list';
 import FilmTabs from '../film-tabs/film-tabs';
-import films from '../../mocks/films';
+import {getFilmsByGenre} from '../../utils';
+import PropTypes from 'prop-types';
+import filmProp from '../film-screen/film.prop';
 
-function FilmScreen() {
+function FilmScreen(props) {
   const {id} = useParams();
+  const {films} = props;
   const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
+  const FILMS_COUNT = 4;
 
   return (
     <>
@@ -65,7 +69,7 @@ function FilmScreen() {
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
 
-          <FilmsList filmToExclude={film} isSimilarGenre />
+          <FilmsList films={getFilmsByGenre(films, film.genre)} filmToExclude={film} filmsCount={FILMS_COUNT} />
         </section>
 
         <Footer />
@@ -73,5 +77,11 @@ function FilmScreen() {
     </>
   );
 }
+
+FilmScreen.propTypes = {
+  films: PropTypes.arrayOf(
+    filmProp,
+  ),
+};
 
 export default FilmScreen;

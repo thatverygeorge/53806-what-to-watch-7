@@ -2,6 +2,7 @@ import React from 'react';
 import {Link, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import filmProp from '../film-screen/film.prop';
+import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
@@ -20,7 +21,7 @@ function AddReviewScreen(props) {
 
         <h1 className="visually-hidden">WTW</h1>
 
-        <header className="page-header">
+        <Header className="page-header">
           <Logo />
 
           <nav className="breadcrumbs">
@@ -35,7 +36,7 @@ function AddReviewScreen(props) {
           </nav>
 
           <UserBlock />
-        </header>
+        </Header>
 
         <div className="film-card__poster film-card__poster--small">
           <img src={film.posterImage} alt={`${film.name} poster`} width="218" height="327" />

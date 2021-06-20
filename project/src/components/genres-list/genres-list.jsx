@@ -4,18 +4,9 @@ import {Link} from 'react-router-dom';
 import filmProp from '../film-screen/film.prop';
 
 function GenresList(props) {
-  const {films, activeGenre, onGenreChange} = props;
+  const {films, activeGenre, handleGenreChange} = props;
 
   const genres = new Set(films.map((film) => film.genre));
-
-  function handleGenreChange(evt) {
-    if (evt.target.tagName === 'A') {
-      evt.preventDefault();
-
-      const genre = evt.target.textContent;
-      onGenreChange(genre);
-    }
-  }
 
   return (
     <ul className="catalog__genres-list" onClick={handleGenreChange}>
@@ -37,7 +28,7 @@ GenresList.propTypes = {
     filmProp,
   ),
   activeGenre: PropTypes.string.isRequired,
-  onGenreChange: PropTypes.func.isRequired,
+  handleGenreChange: PropTypes.func.isRequired,
 };
 
 export default GenresList;

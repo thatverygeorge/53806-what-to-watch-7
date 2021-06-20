@@ -1,20 +1,54 @@
-import React from 'react';
+/* eslint-disable no-console */
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import FilmsList from '../films-list/films-list';
 import GenresList from '../genres-list/genres-list';
+import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
+import ButtonShowMore from '../button-show-more/button-show-more';
 import filmProp from '../film-screen/film.prop';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../store/action';
 import {getFilmsByGenre} from '../../utils';
 
+const INITIAL_FILMS_COUNT = 8;
+const ADD_FILMS_STEP = 8;
+const INITIAL_GENRE = 'All genres';
+
 function MainScreen(props) {
+  const [filmsCount, setFilmsCount] = useState(INITIAL_FILMS_COUNT);
+  const [isShowMoreButtonVisible, setIsShowMoreButtonVisible] = useState(true);
   const {films, genre, onGenreChange} = props;
   const promoFilm = films[0];
-  const FILMS_COUNT = 8;
+
+  useEffect(() => {
+    onGenreChange(INITIAL_GENRE);
+  }, [onGenreChange]);
+
+  useEffect(() => {
+    const filmsByGenreCount = getFilmsByGenre(films.slice(1), genre).length;
+
+    filmsCount >= filmsByGenreCount ? setIsShowMoreButtonVisible(false) : setIsShowMoreButtonVisible(true);
+
+  }, [films, genre, filmsCount, isShowMoreButtonVisible]);
+
+  function handleGenreChange(evt) {
+    if (evt.target.tagName === 'A') {
+      evt.preventDefault();
+
+      if (evt.target.textContent !== genre) {
+        setFilmsCount(INITIAL_FILMS_COUNT);
+        onGenreChange(evt.target.textContent);
+      }
+    }
+  }
+
+  function handleShowMoreClick() {
+    setFilmsCount((prevFilmsCount) => prevFilmsCount + ADD_FILMS_STEP);
+  }
 
   return (
     <>
@@ -25,11 +59,11 @@ function MainScreen(props) {
 
         <h1 className="visually-hidden">WTW</h1>
 
-        <header className="page-header film-card__head">
+        <Header>
           <Logo />
 
           <UserBlock />
-        </header>
+        </Header>
 
         <div className="film-card__wrap">
           <div className="film-card__info">
@@ -62,12 +96,12 @@ function MainScreen(props) {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <GenresList films={films} activeGenre={genre} onGenreChange={onGenreChange} />
+          <GenresList films={films} activeGenre={genre} handleGenreChange={handleGenreChange} />
 
-          <FilmsList films={getFilmsByGenre(films, genre)} filmToExclude={promoFilm} filmsCount={FILMS_COUNT} />
+          <FilmsList films={getFilmsByGenre(films, genre)} filmToExclude={promoFilm} filmsCount={filmsCount} />
 
           <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
+            {isShowMoreButtonVisible && <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />}
           </div>
         </section>
 

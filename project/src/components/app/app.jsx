@@ -30,7 +30,7 @@ function App(props) {
         <Route exact path={AppRoute.ADD_REVIEW}>
           <AddReviewScreen films={films} />
         </Route>
-        <Route exact path={[AppRoute.FILM, AppRoute.FILM_DETAILS, AppRoute.FILM_REVIEWS]}>
+        <Route exact path={[AppRoute.FILM, AppRoute.FILM_DETAILS_OR_REVIEWS]}>
           <FilmScreen films={films} />
         </Route>
         <Route exact path={AppRoute.PLAYER}>

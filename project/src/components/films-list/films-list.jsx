@@ -12,7 +12,7 @@ function FilmsList(props) {
   }
 
   function getFilms() {
-    return films.filter((film) => film.name !== filmToExclude.name).slice(0, filmsCount);
+    return films.filter((film) => film.id !== filmToExclude.id).slice(0, filmsCount);
   }
 
   return (

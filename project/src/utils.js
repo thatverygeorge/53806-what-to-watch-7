@@ -36,6 +36,10 @@ export function getRatingLevel(rating) {
   return 'Awesome';
 }
 
+export function getSimilarFilms(films, id, count) {
+  return films.filter((film) => film.id !== id).slice(0, count);
+}
+
 export function getFilmsByGenre(films, genre) {
   return genre === 'All genres' ? films : films.filter((film) => film.genre === genre);
 }

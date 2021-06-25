@@ -9,11 +9,19 @@ import FilmScreen from '../film-screen/film-screen';
 import AddReviewScreen from '../add-review-screen/add-review-screen';
 import PlayerScreen from '../player-screen/player-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
+import LoadingScreen from '../loading-screen/loading-screen';
 import filmProp from '../film-screen/film.prop';
 import {connect} from 'react-redux';
 
+
 function App(props) {
-  const {films} = props;
+  const {films, isDataLoaded} = props;
+
+  if (!isDataLoaded) {
+    return (
+      <LoadingScreen />
+    );
+  }
 
   return (
     <BrowserRouter>
@@ -30,7 +38,7 @@ function App(props) {
         <Route exact path={AppRoute.ADD_REVIEW}>
           <AddReviewScreen films={films} />
         </Route>
-        <Route exact path={[AppRoute.FILM, AppRoute.FILM_DETAILS_OR_REVIEWS]}>
+        <Route exact path={AppRoute.FILM}>
           <FilmScreen films={films} />
         </Route>
         <Route exact path={AppRoute.PLAYER}>
@@ -48,10 +56,12 @@ App.propTypes = {
   films: PropTypes.arrayOf(
     filmProp,
   ),
+  isDataLoaded: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   films: state.films,
+  isDataLoaded: state.isDataLoaded,
 });
 
 export {App};

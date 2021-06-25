@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import FilmsList from '../films-list/films-list';
@@ -20,20 +19,12 @@ const INITIAL_GENRE = 'All genres';
 
 function MainScreen(props) {
   const [filmsCount, setFilmsCount] = useState(INITIAL_FILMS_COUNT);
-  const [isShowMoreButtonVisible, setIsShowMoreButtonVisible] = useState(true);
   const {films, genre, onGenreChange} = props;
   const promoFilm = films[0];
 
   useEffect(() => {
     onGenreChange(INITIAL_GENRE);
   }, [onGenreChange]);
-
-  useEffect(() => {
-    const filmsByGenreCount = getFilmsByGenre(films.slice(1), genre).length;
-
-    filmsCount >= filmsByGenreCount ? setIsShowMoreButtonVisible(false) : setIsShowMoreButtonVisible(true);
-
-  }, [films, genre, filmsCount, isShowMoreButtonVisible]);
 
   function handleGenreChange(evt) {
     if (evt.target.tagName === 'A') {
@@ -101,7 +92,7 @@ function MainScreen(props) {
           <FilmsList films={getFilmsByGenre(films, genre)} filmToExclude={promoFilm} filmsCount={filmsCount} />
 
           <div className="catalog__more">
-            {isShowMoreButtonVisible && <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />}
+            {!(filmsCount >= getFilmsByGenre(films.slice(1), genre).length) && <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />}
           </div>
         </section>
 

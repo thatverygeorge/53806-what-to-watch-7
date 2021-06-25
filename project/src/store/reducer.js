@@ -1,9 +1,9 @@
-import films from '../mocks/films';
 import {ActionType} from './action';
 
 const initialState = {
   genre: 'All genres',
-  films: films,
+  films: [],
+  isDataLoaded: false,
 };
 
 export function reducer(state = initialState, action) {
@@ -12,6 +12,12 @@ export function reducer(state = initialState, action) {
       return {
         ...state,
         genre: action.payload,
+      };
+    case ActionType.LOAD_FILMS:
+      return {
+        ...state,
+        films: action.payload,
+        isDataLoaded: true,
       };
     default:
       return initialState;

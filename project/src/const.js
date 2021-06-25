@@ -12,3 +12,11 @@ export const Tabs = {
   DETAILS: 'details',
   REVIEWS: 'reviews',
 };
+
+export const APIRoute = {
+  FILMS: '/films',
+  PROMO: '/promo',
+  FAVORITE: '/favorite',
+  LOGIN: '/login',
+  LOGOUT: '/logout',
+};

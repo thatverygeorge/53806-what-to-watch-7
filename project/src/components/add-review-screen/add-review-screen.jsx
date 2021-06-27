@@ -1,12 +1,12 @@
 import React from 'react';
-import {Link, Redirect, useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import filmProp from '../film-screen/film.prop';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
-import {AppRoute} from '../../const';
+import NotFoundScreen from '../not-found-screen/not-found-screen';
 
 function AddReviewScreen(props) {
   const {id} = useParams();
@@ -14,7 +14,7 @@ function AddReviewScreen(props) {
   const film = films.find((currentFilm) => currentFilm.id.toString() === id);
 
   if (!film) {
-    return <Redirect to={AppRoute.NOT_FOUND} />;
+    return <NotFoundScreen />;
   }
 
   return (

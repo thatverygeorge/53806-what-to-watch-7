@@ -5,8 +5,8 @@ import filmProp from '../film-screen/film.prop';
 import {getSimilarFilms} from '../../utils';
 
 function FilmsList(props) {
-  const [activeFilmID, setActiveFilmID] = useState(-1);
-  const {films, filmIDToExclude = -1, filmsCount} = props;
+  const [activeFilmID, setActiveFilmID] = useState(undefined);
+  const {films, filmIDToExclude, filmsCount} = props;
 
   function handleHoverChange(id) {
     setActiveFilmID(id);

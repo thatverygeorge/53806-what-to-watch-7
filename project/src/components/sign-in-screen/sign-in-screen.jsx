@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
@@ -10,9 +10,6 @@ import {Redirect} from 'react-router-dom';
 
 function SignInScreen(props) {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const emailRef = useRef();
-  const passwordRef = useRef();
-
   const {onSubmit, authorizationStatus} = props;
 
   if (authorizationStatus !== AuthorizationStatus.NO_AUTH) {
@@ -22,16 +19,25 @@ function SignInScreen(props) {
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    onSubmit({
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    });
+    if (isPasswordValid) {
+      const formData = new FormData(evt.target);
+
+      const email = formData.get('user-email');
+      const password = formData.get('user-password');
+
+      onSubmit({
+        email,
+        password,
+      });
+    }
   }
 
-  function handlePasswordChange(evt) {
-    evt.target.value ?
-      setIsPasswordValid(evt.target.value.split('').some((character) => character !== ' ')) :
-      setIsPasswordValid(true);
+  function handleInput(evt) {
+    if (evt.target.name === 'user-password') {
+      evt.target.value ?
+        setIsPasswordValid(evt.target.value.split('').some((character) => character !== ' ')) :
+        setIsPasswordValid(true);
+    }
   }
 
   return (
@@ -43,14 +49,15 @@ function SignInScreen(props) {
       </Header>
 
       <div className="sign-in user-page__content">
-        <form action="#" className="sign-in__form" onSubmit={isPasswordValid && handleSubmit}>
-          <div className={!isPasswordValid ? 'sign-in__message' : 'visually-hidden'}>
-            <p>Please enter a valid password</p>
-          </div>
+        <form action="#" className="sign-in__form" onInput={handleInput} onSubmit={handleSubmit}>
+          {!isPasswordValid ?
+            <div className="sign-in__message">
+              <p>Please enter a valid password</p>
+            </div> :
+            ''}
           <div className="sign-in__fields">
             <div className="sign-in__field">
               <input
-                ref={emailRef}
                 className="sign-in__input"
                 type="email"
                 placeholder="Email address"
@@ -62,14 +69,12 @@ function SignInScreen(props) {
             </div>
             <div className="sign-in__field">
               <input
-                ref={passwordRef}
                 className="sign-in__input"
                 type="password"
                 placeholder="Password"
                 name="user-password"
                 id="user-password"
                 required
-                onChange={handlePasswordChange}
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-password">Password</label>
             </div>

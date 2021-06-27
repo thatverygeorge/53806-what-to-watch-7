@@ -6,7 +6,7 @@ import {getSimilarFilms} from '../../utils';
 
 function FilmsList(props) {
   const [activeFilmID, setActiveFilmID] = useState(-1);
-  const {films, filmToExclude, filmsCount} = props;
+  const {films, filmIDToExclude = -1, filmsCount} = props;
 
   function handleHoverChange(id) {
     setActiveFilmID(id);
@@ -14,7 +14,7 @@ function FilmsList(props) {
 
   return (
     <div className="catalog__films-list">
-      {getSimilarFilms(films, filmToExclude.id, filmsCount).map((film) => (
+      {getSimilarFilms(films, filmIDToExclude, filmsCount).map((film) => (
         <SmallFilmCard
           key={film.id}
           film={film}
@@ -26,7 +26,7 @@ function FilmsList(props) {
 }
 
 FilmsList.propTypes = {
-  filmToExclude: filmProp,
+  filmIDToExclude: PropTypes.number,
   films: PropTypes.arrayOf(
     filmProp,
   ),

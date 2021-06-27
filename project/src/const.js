@@ -5,6 +5,7 @@ export const AppRoute = {
   FILM: '/films/:id/:tab(details|reviews)?',
   ADD_REVIEW: '/films/:id/review',
   PLAYER: '/player/:id',
+  NOT_FOUND: '/404',
 };
 
 export const Tabs = {
@@ -15,8 +16,11 @@ export const Tabs = {
 
 export const APIRoute = {
   FILMS: '/films',
-  PROMO: '/promo',
-  FAVORITE: '/favorite',
   LOGIN: '/login',
   LOGOUT: '/logout',
+};
+
+export const AuthorizationStatus = {
+  AUTH: 'AUTH',
+  NO_AUTH: 'NO_AUTH',
 };

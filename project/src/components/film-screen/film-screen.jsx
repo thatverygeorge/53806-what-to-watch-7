@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link, Redirect, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
@@ -10,12 +10,17 @@ import FilmTabs from '../film-tabs/film-tabs';
 import {getFilmsByGenre} from '../../utils';
 import PropTypes from 'prop-types';
 import filmProp from '../film-screen/film.prop';
+import {AppRoute} from '../../const';
 
 function FilmScreen(props) {
   const {id} = useParams();
   const {films} = props;
-  const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
+  const film = films.find((currentFilm) => currentFilm.id.toString() === id);
   const FILMS_COUNT = 4;
+
+  if (!film) {
+    return <Redirect to={AppRoute.NOT_FOUND} />;
+  }
 
   return (
     <>
@@ -67,10 +72,10 @@ function FilmScreen(props) {
       </section>
 
       <div className="page-content">
-        <section className="catalog catalog--like-this">
+        <section className={`catalog catalog--like-this ${getFilmsByGenre(films, film.genre).length - 1 <= 0 ? 'visually-hidden' : ''}`}>
           <h2 className="catalog__title">More like this</h2>
 
-          <FilmsList films={getFilmsByGenre(films, film.genre)} filmToExclude={film} filmsCount={FILMS_COUNT} />
+          <FilmsList films={getFilmsByGenre(films, film.genre)} filmIDToExclude={film.id} filmsCount={FILMS_COUNT} />
         </section>
 
         <Footer />

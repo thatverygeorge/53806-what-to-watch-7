@@ -1,16 +1,21 @@
 import React from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link, Redirect, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import filmProp from '../film-screen/film.prop';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
+import {AppRoute} from '../../const';
 
 function AddReviewScreen(props) {
   const {id} = useParams();
   const {films} = props;
-  const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
+  const film = films.find((currentFilm) => currentFilm.id.toString() === id);
+
+  if (!film) {
+    return <Redirect to={AppRoute.NOT_FOUND} />;
+  }
 
   return (
     <section className="film-card film-card--full">

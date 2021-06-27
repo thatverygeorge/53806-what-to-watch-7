@@ -89,10 +89,10 @@ function MainScreen(props) {
 
           <GenresList films={films} activeGenre={genre} handleGenreChange={handleGenreChange} />
 
-          <FilmsList films={getFilmsByGenre(films, genre)} filmToExclude={promoFilm} filmsCount={filmsCount} />
+          <FilmsList films={getFilmsByGenre(films, genre)} filmsCount={filmsCount} />
 
           <div className="catalog__more">
-            {!(filmsCount >= getFilmsByGenre(films.slice(1), genre).length) && <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />}
+            {!(filmsCount >= getFilmsByGenre(films, genre).length) && <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />}
           </div>
         </section>
 

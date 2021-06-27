@@ -23,7 +23,7 @@ function MyListScreen(props) {
       <section className="catalog">
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-        <FilmsList films={films} />
+        <FilmsList films={films} filmsCount={films.length} />
       </section>
 
       <Footer />

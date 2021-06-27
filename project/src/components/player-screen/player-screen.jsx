@@ -2,14 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import filmProp from '../film-screen/film.prop';
 import {AppRoute} from '../../const';
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory, useParams, Redirect} from 'react-router-dom';
 import {formatRunTimeForPlayer} from '../../utils';
 
 function PlayerScreen(props) {
   const history = useHistory();
   const {id} = useParams();
   const {films} = props;
-  const film = films.find((currentFilm) => currentFilm.id === parseInt(id, 10));
+  const film = films.find((currentFilm) => currentFilm.id.toString() === id);
+
+  if (!film) {
+    return <Redirect to={AppRoute.NOT_FOUND} />;
+  }
 
   return (
     <div className="player">

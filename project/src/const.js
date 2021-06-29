@@ -18,6 +18,9 @@ export const APIRoute = {
   FILMS: '/films',
   LOGIN: '/login',
   LOGOUT: '/logout',
+  REVIEWS: '/comments',
+  SIMILAR: '/similar',
+  PROMO: '/promo',
 };
 
 export const AuthorizationStatus = {

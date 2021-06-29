@@ -95,6 +95,10 @@ SignInScreen.propTypes = {
   authorizationStatus: PropTypes.string.isRequired,
 };
 
+const mapStateToProps = (state) => ({
+  authorizationStatus: state.authorizationStatus,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   onSubmit(authData) {
     dispatch(login(authData));
@@ -102,4 +106,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export {SignInScreen};
-export default connect(null, mapDispatchToProps)(SignInScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen);

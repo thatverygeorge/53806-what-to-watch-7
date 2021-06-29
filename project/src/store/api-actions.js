@@ -19,6 +19,8 @@ export const login = ({email, password}) => (dispatch, _getState, api) => (
     .then(({data}) => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('avatar', data.avatar_url);
+      localStorage.setItem('name', data.name);
+      localStorage.setItem('email', data.email);
     })
     .then(() => dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH)))
     .then(() => dispatch(ActionCreator.redirectToRoute(AppRoute.MAIN)))

@@ -2,7 +2,7 @@ import React from 'react';
 
 function LoadingScreen() {
   return (
-    <p style={{ marginTop: '150px', textAlign: 'center' }}>Loading ...</p>
+    <p style={{ marginTop: '100px', textAlign: 'center', color: '#252525' }}>Loading ...</p>
   );
 }
 

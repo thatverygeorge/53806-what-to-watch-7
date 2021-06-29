@@ -12,6 +12,11 @@ import filmProp from '../film-screen/film.prop';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../store/action';
 import {getFilmsByGenre} from '../../utils';
+import NotFoundScreen from '../not-found-screen/not-found-screen';
+import LoadingScreen from '../loading-screen/loading-screen';
+import {APIRoute} from '../../const';
+import {createAPI} from '../../services/api';
+import {adaptToClient} from '../../store/adapter';
 
 const INITIAL_FILMS_COUNT = 8;
 const ADD_FILMS_STEP = 8;
@@ -19,12 +24,47 @@ const INITIAL_GENRE = 'All genres';
 
 function MainScreen(props) {
   const [filmsCount, setFilmsCount] = useState(INITIAL_FILMS_COUNT);
+  const [promoState, setPromoState] = useState({
+    promoFilm: undefined,
+    isFetchComplete: false,
+  });
+  const {promoFilm, isFetchComplete} = promoState;
   const {films, genre, onGenreChange} = props;
-  const promoFilm = films[0];
+
+  useEffect(() => {
+    (async function() {
+      const api = createAPI();
+      try {
+        const {data} = await api.get(`${APIRoute.PROMO}`);
+        setPromoState((prevState) => (
+          {
+            ...prevState,
+            promoFilm: adaptToClient(data),
+            isFetchComplete: true,
+          }
+        ));
+      } catch (error) {
+        setPromoState((prevState) => (
+          {
+            ...prevState,
+            isFetchComplete: true,
+          }
+        ));
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     onGenreChange(INITIAL_GENRE);
   }, [onGenreChange]);
+
+  if (!promoFilm) {
+    if(!isFetchComplete) {
+      return <LoadingScreen />;
+    }
+
+    return <NotFoundScreen />;
+  }
 
   function handleGenreChange(evt) {
     if (evt.target.tagName === 'A') {

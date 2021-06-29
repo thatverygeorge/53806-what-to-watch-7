@@ -1,19 +1,51 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import PropTypes from 'prop-types';
-import filmProp from '../film-screen/film.prop';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
+import LoadingScreen from '../loading-screen/loading-screen';
+import {adaptToClient} from '../../store/adapter';
+import {APIRoute} from '../../const';
+import {createAPI} from '../../services/api';
 
-function AddReviewScreen(props) {
+function AddReviewScreen() {
   const {id} = useParams();
-  const {films} = props;
-  const film = films.find((currentFilm) => currentFilm.id.toString() === id);
+  const [filmState, setFilmState] = useState({
+    film: undefined,
+    isFetchComplete: false,
+  });
+  const {film, isFetchComplete} = filmState;
+
+  useEffect(() => {
+    (async function() {
+      const api = createAPI();
+      try {
+        const filmResponse = await api.get(`${APIRoute.FILMS}/${id}`);
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            film: adaptToClient(filmResponse.data),
+            isFetchComplete: true,
+          }
+        ));
+      } catch (error) {
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            isFetchComplete: true,
+          }
+        ));
+      }
+    })();
+  }, [id]);
 
   if (!film) {
+    if(!isFetchComplete) {
+      return <LoadingScreen />;
+    }
+
     return <NotFoundScreen />;
   }
 
@@ -49,17 +81,11 @@ function AddReviewScreen(props) {
       </div>
 
       <div className="add-review">
-        <AddReviewForm />
+        <AddReviewForm id={id} />
       </div>
 
     </section>
   );
 }
-
-AddReviewScreen.propTypes = {
-  films: PropTypes.arrayOf(
-    filmProp,
-  ),
-};
 
 export default AddReviewScreen;

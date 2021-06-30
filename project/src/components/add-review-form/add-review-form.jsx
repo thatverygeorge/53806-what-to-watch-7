@@ -1,15 +1,39 @@
+/* eslint-disable no-console */
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+import {createAPI} from '../../services/api';
+import {APIRoute} from '../../const';
 
-function AddReviewForm() {
+function AddReviewForm(props) {
+  const {id} = props;
   const [review, setReview] = useState({
     rating: 0,
     comment: '',
   });
-
   const {rating, comment} = review;
 
   function handleSubmit(evt) {
     evt.preventDefault();
+
+    Array.from(evt.target.elements).forEach((element) => element.disabled = true);
+
+    (async function() {
+      try {
+        const api = createAPI();
+        await api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment});
+
+        Array.from(evt.target.elements).forEach((element) => element.disabled = false);
+
+        evt.target.reset();
+        setReview((prevReview) => ({
+          ...prevReview,
+          rating: 0,
+          comment: '',
+        }));
+      } catch (error) {
+        Array.from(evt.target.elements).forEach((element) => element.disabled = false);
+      }
+    })();
   }
 
   function handleRatingChange(evt) {
@@ -76,5 +100,9 @@ function AddReviewForm() {
     </form>
   );
 }
+
+AddReviewForm.propTypes = {
+  id: PropTypes.string.isRequired,
+};
 
 export default AddReviewForm;

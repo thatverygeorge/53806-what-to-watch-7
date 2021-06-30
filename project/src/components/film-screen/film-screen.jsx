@@ -1,5 +1,5 @@
-import React from 'react';
-import {Link, Redirect, useParams} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
@@ -7,19 +7,64 @@ import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
 import FilmsList from '../films-list/films-list';
 import FilmTabs from '../film-tabs/film-tabs';
-import {getFilmsByGenre} from '../../utils';
+import NotFoundScreen from '../not-found-screen/not-found-screen';
+import LoadingScreen from '../loading-screen/loading-screen';
+import {APIRoute, AuthorizationStatus} from '../../const';
+import {createAPI} from '../../services/api';
+import {adaptToClient} from '../../store/adapter';
 import PropTypes from 'prop-types';
-import filmProp from '../film-screen/film.prop';
-import {AppRoute} from '../../const';
+import {connect} from 'react-redux';
 
 function FilmScreen(props) {
+  const {authorizationStatus} = props;
+  const [filmState, setFilmState] = useState({
+    film: undefined,
+    similar: undefined,
+    isFetchComplete: false,
+  });
+  const {film, similar, isFetchComplete} = filmState;
+
   const {id} = useParams();
-  const {films} = props;
-  const film = films.find((currentFilm) => currentFilm.id.toString() === id);
   const FILMS_COUNT = 4;
 
+  useEffect(() => {
+    (async function() {
+      const api = createAPI();
+      try {
+        const filmResponse = await api.get(`${APIRoute.FILMS}/${id}`);
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            film: adaptToClient(filmResponse.data),
+            isFetchComplete: true,
+          }
+        ));
+
+        const similarResponse = await api.get(`${APIRoute.FILMS}/${id}${APIRoute.SIMILAR}`);
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            similar: similarResponse.data.map((similarFilm) => adaptToClient(similarFilm)),
+            isFetchComplete: true,
+          }
+        ));
+      } catch (error) {
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            isFetchComplete: true,
+          }
+        ));
+      }
+    })();
+  }, [id]);
+
   if (!film) {
-    return <Redirect to={AppRoute.NOT_FOUND} />;
+    if(!isFetchComplete) {
+      return <LoadingScreen />;
+    }
+
+    return <NotFoundScreen />;
   }
 
   return (
@@ -54,7 +99,7 @@ function FilmScreen(props) {
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link to={`/films/${film.id}/review`} className="btn film-card__button">Add review</Link>
+                {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`/films/${film.id}/review`} className="btn film-card__button">Add review</Link> : ''}
               </div>
             </div>
           </div>
@@ -66,18 +111,18 @@ function FilmScreen(props) {
               <img src={film.posterImage} alt={`${film.name} poster`} width="218" height="327" />
             </div>
 
-            <FilmTabs film={film} />
+            <FilmTabs film={film} id={film.id} />
           </div>
         </div>
       </section>
 
       <div className="page-content">
-        <section className={`catalog catalog--like-this ${getFilmsByGenre(films, film.genre).length - 1 <= 0 ? 'visually-hidden' : ''}`}>
-          <h2 className="catalog__title">More like this</h2>
+        {(!similar || (similar.length - 1 <= 0)) ? '' :
+          <section className="catalog catalog--like-this">
+            <h2 className="catalog__title">More like this</h2>
 
-          <FilmsList films={getFilmsByGenre(films, film.genre)} filmIDToExclude={film.id} filmsCount={FILMS_COUNT} />
-        </section>
-
+            <FilmsList films={similar} filmIDToExclude={film.id} filmsCount={FILMS_COUNT} />
+          </section>}
         <Footer />
       </div>
     </>
@@ -85,9 +130,12 @@ function FilmScreen(props) {
 }
 
 FilmScreen.propTypes = {
-  films: PropTypes.arrayOf(
-    filmProp,
-  ),
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
-export default FilmScreen;
+const mapStateToProps = (state) => ({
+  authorizationStatus: state.authorizationStatus,
+});
+
+export {FilmScreen};
+export default connect(mapStateToProps)(FilmScreen);

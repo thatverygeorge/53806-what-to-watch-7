@@ -4,6 +4,7 @@ export const ActionType = {
   REQUIRED_AUTHORIZATION: 'requiredAuthorization',
   LOGOUT: 'logout',
   REDIRECT_TO_ROUTE: 'redirectToRoute',
+  POST_REVIEW: 'postReview',
 };
 
 export const ActionCreator = {

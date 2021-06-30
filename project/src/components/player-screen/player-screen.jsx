@@ -1,18 +1,51 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import filmProp from '../film-screen/film.prop';
+import React, {useEffect, useState} from 'react';
 import {AppRoute} from '../../const';
-import {useHistory, useParams, Redirect} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {formatRunTimeForPlayer} from '../../utils';
+import NotFoundScreen from '../not-found-screen/not-found-screen';
+import LoadingScreen from '../loading-screen/loading-screen';
+import {adaptToClient} from '../../store/adapter';
+import {APIRoute} from '../../const';
+import {createAPI} from '../../services/api';
 
-function PlayerScreen(props) {
+function PlayerScreen() {
   const history = useHistory();
   const {id} = useParams();
-  const {films} = props;
-  const film = films.find((currentFilm) => currentFilm.id.toString() === id);
+  const [filmState, setFilmState] = useState({
+    film: undefined,
+    isFetchComplete: false,
+  });
+  const {film, isFetchComplete} = filmState;
+
+  useEffect(() => {
+    (async function() {
+      const api = createAPI();
+      try {
+        const filmResponse = await api.get(`${APIRoute.FILMS}/${id}`);
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            film: adaptToClient(filmResponse.data),
+            isFetchComplete: true,
+          }
+        ));
+      } catch (error) {
+        setFilmState((prevState) => (
+          {
+            ...prevState,
+            isFetchComplete: true,
+          }
+        ));
+      }
+    })();
+  }, [id]);
 
   if (!film) {
-    return <Redirect to={AppRoute.NOT_FOUND} />;
+    if(!isFetchComplete) {
+      return <LoadingScreen />;
+    }
+
+    return <NotFoundScreen />;
   }
 
   return (
@@ -50,11 +83,5 @@ function PlayerScreen(props) {
     </div>
   );
 }
-
-PlayerScreen.propTypes = {
-  films: PropTypes.arrayOf(
-    filmProp,
-  ),
-};
 
 export default PlayerScreen;

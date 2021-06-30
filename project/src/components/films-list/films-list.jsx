@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import filmProp from '../film-screen/film.prop';
-import {getSimilarFilms} from '../../utils';
+import {excludeFilm} from '../../utils';
 
 function FilmsList(props) {
-  const [activeFilmID, setActiveFilmID] = useState(-1);
-  const {films, filmIDToExclude = -1, filmsCount} = props;
+  const {films, filmIDToExclude, filmsCount} = props;
+  const [activeFilmID, setActiveFilmID] = useState(undefined);
 
   function handleHoverChange(id) {
     setActiveFilmID(id);
@@ -14,7 +14,7 @@ function FilmsList(props) {
 
   return (
     <div className="catalog__films-list">
-      {getSimilarFilms(films, filmIDToExclude, filmsCount).map((film) => (
+      {excludeFilm(films, filmIDToExclude).slice(0, filmsCount).map((film) => (
         <SmallFilmCard
           key={film.id}
           film={film}
@@ -26,11 +26,11 @@ function FilmsList(props) {
 }
 
 FilmsList.propTypes = {
-  filmIDToExclude: PropTypes.number,
   films: PropTypes.arrayOf(
     filmProp,
   ),
   filmsCount: PropTypes.number.isRequired,
+  filmIDToExclude: PropTypes.number,
 };
 
 export default FilmsList;

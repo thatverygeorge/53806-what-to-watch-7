@@ -14,7 +14,7 @@ function SmallFilmCard(props) {
       className="small-film-card catalog__films-card"
       onClick={() => history.push(`/films/${film.id}`)}
       onMouseEnter={() => handleHoverChange(film.id)}
-      onMouseLeave={() => handleHoverChange(-1)}
+      onMouseLeave={() => handleHoverChange(undefined)}
     >
       <div className="small-film-card__image">
         {!isActive ? <img src={film.previewImage} alt={film.name} width="280" height="175" /> : <VideoPlayer film={film} />}

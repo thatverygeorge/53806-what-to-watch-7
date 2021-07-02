@@ -28,7 +28,7 @@ function App(props) {
     <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.MAIN}>
-          <MainScreen films={films} />
+          <MainScreen />
         </Route>
         <Route exact path={AppRoute.SIGN_IN}>
           <SignInScreen />
@@ -42,14 +42,14 @@ function App(props) {
         <PrivateRoute
           exact
           path={AppRoute.ADD_REVIEW}
-          render={() => <AddReviewScreen films={films} />}
+          render={() => <AddReviewScreen />}
         >
         </PrivateRoute>
         <Route exact path={AppRoute.FILM}>
-          <FilmScreen films={films} />
+          <FilmScreen />
         </Route>
         <Route exact path={AppRoute.PLAYER}>
-          <PlayerScreen films={films} />
+          <PlayerScreen />
         </Route>
         <Route>
           <NotFoundScreen />
@@ -67,8 +67,8 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  films: state.films,
-  isDataLoaded: state.isDataLoaded,
+  films: state.films.data,
+  isDataLoaded: state.films.isDataLoaded,
 });
 
 export {App};

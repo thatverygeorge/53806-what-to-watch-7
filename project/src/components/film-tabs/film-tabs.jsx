@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link, useParams} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import filmProp from '../film-screen/film.prop';
 import FilmOverview from '../film-overview/film-overview';
 import FilmDetails from '../film-details/film-details';
@@ -8,7 +7,7 @@ import FilmReviews from '../film-reviews/film-reviews';
 import {Tabs} from '../../const';
 
 function FilmTabs(props) {
-  const {film, id} = props;
+  const {film} = props;
   const {tab = Tabs.OVERVIEW} = useParams();
 
   function getComponentByActiveTab() {
@@ -16,7 +15,7 @@ function FilmTabs(props) {
       case Tabs.DETAILS:
         return <FilmDetails film={film} />;
       case Tabs.REVIEWS:
-        return <FilmReviews id={id} />;
+        return <FilmReviews film={film} />;
       default:
         return <FilmOverview film={film} />;
     }
@@ -45,7 +44,6 @@ function FilmTabs(props) {
 
 FilmTabs.propTypes = {
   film: filmProp,
-  id: PropTypes.number.isRequired,
 };
 
 export default FilmTabs;

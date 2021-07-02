@@ -18,4 +18,4 @@ export default PropTypes.shape({
   genre: PropTypes.string.isRequired,
   released: PropTypes.number.isRequired,
   isFavorite: PropTypes.bool.isRequired,
-}).isRequired;
+});

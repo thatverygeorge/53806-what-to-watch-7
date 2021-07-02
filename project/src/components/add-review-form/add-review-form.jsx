@@ -1,39 +1,41 @@
-/* eslint-disable no-console */
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {createAPI} from '../../services/api';
-import {APIRoute} from '../../const';
+import {postReview} from '../../store/api-actions';
+import {connect} from 'react-redux';
 
 function AddReviewForm(props) {
-  const {id} = props;
+  const {id, sendReview} = props;
+  const formRef = useRef();
   const [review, setReview] = useState({
     rating: 0,
     comment: '',
   });
   const {rating, comment} = review;
 
+  function setIsFormDisabled(bool) {
+    Array.from(formRef.current.elements).forEach((element) => element.disabled = bool);
+  }
+
+  function onError() {
+    setIsFormDisabled(false);
+  }
+
+  function onSuccess() {
+    setIsFormDisabled(false);
+
+    formRef.current.reset();
+    setReview((prevReview) => ({
+      ...prevReview,
+      rating: 0,
+      comment: '',
+    }));
+  }
+
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    Array.from(evt.target.elements).forEach((element) => element.disabled = true);
-
-    (async function() {
-      try {
-        const api = createAPI();
-        await api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment});
-
-        Array.from(evt.target.elements).forEach((element) => element.disabled = false);
-
-        evt.target.reset();
-        setReview((prevReview) => ({
-          ...prevReview,
-          rating: 0,
-          comment: '',
-        }));
-      } catch (error) {
-        Array.from(evt.target.elements).forEach((element) => element.disabled = false);
-      }
-    })();
+    setIsFormDisabled(true);
+    sendReview(id, {rating, comment}, onSuccess, onError);
   }
 
   function handleRatingChange(evt) {
@@ -55,7 +57,7 @@ function AddReviewForm(props) {
   }
 
   return (
-    <form action="#" className="add-review__form" onSubmit={handleSubmit}>
+    <form ref={formRef} action="#" className="add-review__form" onSubmit={handleSubmit}>
       <div className="rating">
         <div className="rating__stars" onChange={handleRatingChange}>
           <input className="rating__input" id="star-10" type="radio" name="rating" value="10" />
@@ -103,6 +105,14 @@ function AddReviewForm(props) {
 
 AddReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
+  sendReview: PropTypes.func.isRequired,
 };
 
-export default AddReviewForm;
+const mapDispatchToProps = (dispatch) => ({
+  sendReview(id, {rating, comment}, onSuccess, onError) {
+    dispatch(postReview(id, {rating, comment}, onSuccess, onError));
+  },
+});
+
+export {AddReviewForm};
+export default connect(null, mapDispatchToProps)(AddReviewForm);

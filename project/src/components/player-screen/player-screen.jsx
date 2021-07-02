@@ -1,50 +1,37 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {AppRoute} from '../../const';
 import {useHistory, useParams} from 'react-router-dom';
 import {formatRunTimeForPlayer} from '../../utils';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {adaptToClient} from '../../store/adapter';
-import {APIRoute} from '../../const';
-import {createAPI} from '../../services/api';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import filmProp from '../film-screen/film.prop';
+import {fetchFilm} from '../../store/api-actions';
+import {ActionCreator} from '../../store/action';
 
-function PlayerScreen() {
+function PlayerScreen(props) {
+  const {film, isDataLoaded, loadFilm, setIsDataLoaded} = props;
   const history = useHistory();
   const {id} = useParams();
-  const [filmState, setFilmState] = useState({
-    film: undefined,
-    isFetchComplete: false,
-  });
-  const {film, isFetchComplete} = filmState;
 
   useEffect(() => {
-    (async function() {
-      const api = createAPI();
-      try {
-        const filmResponse = await api.get(`${APIRoute.FILMS}/${id}`);
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            film: adaptToClient(filmResponse.data),
-            isFetchComplete: true,
-          }
-        ));
-      } catch (error) {
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            isFetchComplete: true,
-          }
-        ));
-      }
-    })();
-  }, [id]);
-
-  if (!film) {
-    if(!isFetchComplete) {
-      return <LoadingScreen />;
+    if (!isDataLoaded) {
+      loadFilm(id);
     }
 
+    return () => {
+      if (isDataLoaded) {
+        setIsDataLoaded(false);
+      }
+    };
+  }, [id, isDataLoaded, loadFilm, setIsDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <LoadingScreen />;
+  }
+
+  if (!film || film.id.toString() !== id) {
     return <NotFoundScreen />;
   }
 
@@ -84,4 +71,26 @@ function PlayerScreen() {
   );
 }
 
-export default PlayerScreen;
+PlayerScreen.propTypes = {
+  film: filmProp,
+  isDataLoaded: PropTypes.bool.isRequired,
+  loadFilm: PropTypes.func.isRequired,
+  setIsDataLoaded: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  film: state.film.data,
+  isDataLoaded: state.film.isDataLoaded,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  loadFilm(id) {
+    dispatch(fetchFilm(id));
+  },
+  setIsDataLoaded(bool) {
+    dispatch(ActionCreator.setIsDataLoaded({key: 'film', isDataLoaded: bool}));
+  },
+});
+
+export {PlayerScreen};
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerScreen);

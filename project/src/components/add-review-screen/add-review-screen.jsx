@@ -1,32 +1,41 @@
 import React, {useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Redirect, Link, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {ActionCreator} from '../../store/action';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
-import PropTypes from 'prop-types';
-import filmProp from '../film-screen/film.prop';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
+import {AppRoute, AuthorizationStatus} from '../../const';
 
-function AddReviewScreen(props) {
-  const {film, isDataLoaded, loadFilm, setIsDataLoaded} = props;
+function AddReviewScreen() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const film = useSelector(getFilm);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const {id} = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isDataLoaded) {
-      loadFilm(id);
+      dispatch(fetchFilm(id));
     }
 
     return () => {
       if (isDataLoaded) {
-        setIsDataLoaded(false);
+        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
       }
     };
-  }, [id, isDataLoaded, loadFilm, setIsDataLoaded]);
+  }, [dispatch, id, isDataLoaded]);
+
+  if (authorizationStatus !== AuthorizationStatus.AUTH) {
+    return <Redirect to={AppRoute.SIGN_IN} />;
+  }
 
   if (!isDataLoaded) {
     return <LoadingScreen />;
@@ -75,26 +84,4 @@ function AddReviewScreen(props) {
   );
 }
 
-AddReviewScreen.propTypes = {
-  film: filmProp,
-  isDataLoaded: PropTypes.bool.isRequired,
-  loadFilm: PropTypes.func.isRequired,
-  setIsDataLoaded: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  film: state.film.data,
-  isDataLoaded: state.film.isDataLoaded,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  loadFilm(id) {
-    dispatch(fetchFilm(id));
-  },
-  setIsDataLoaded(bool) {
-    dispatch(ActionCreator.setIsDataLoaded({key: 'film', isDataLoaded: bool}));
-  },
-});
-
-export {AddReviewScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(AddReviewScreen);
+export default AddReviewScreen;

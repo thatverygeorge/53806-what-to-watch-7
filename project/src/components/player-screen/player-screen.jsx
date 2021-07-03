@@ -4,28 +4,30 @@ import {useHistory, useParams} from 'react-router-dom';
 import {formatRunTimeForPlayer} from '../../utils';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import filmProp from '../film-screen/film.prop';
+import {useDispatch, useSelector} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
-import {ActionCreator} from '../../store/action';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
 
-function PlayerScreen(props) {
-  const {film, isDataLoaded, loadFilm, setIsDataLoaded} = props;
+function PlayerScreen() {
+  const film = useSelector(getFilm);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const history = useHistory();
   const {id} = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isDataLoaded) {
-      loadFilm(id);
+      dispatch(fetchFilm(id));
     }
 
     return () => {
       if (isDataLoaded) {
-        setIsDataLoaded(false);
+        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
       }
     };
-  }, [id, isDataLoaded, loadFilm, setIsDataLoaded]);
+  }, [dispatch, id, isDataLoaded]);
 
   if (!isDataLoaded) {
     return <LoadingScreen />;
@@ -71,26 +73,5 @@ function PlayerScreen(props) {
   );
 }
 
-PlayerScreen.propTypes = {
-  film: filmProp,
-  isDataLoaded: PropTypes.bool.isRequired,
-  loadFilm: PropTypes.func.isRequired,
-  setIsDataLoaded: PropTypes.func.isRequired,
-};
 
-const mapStateToProps = (state) => ({
-  film: state.film.data,
-  isDataLoaded: state.film.isDataLoaded,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  loadFilm(id) {
-    dispatch(fetchFilm(id));
-  },
-  setIsDataLoaded(bool) {
-    dispatch(ActionCreator.setIsDataLoaded({key: 'film', isDataLoaded: bool}));
-  },
-});
-
-export {PlayerScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(PlayerScreen);
+export default PlayerScreen;

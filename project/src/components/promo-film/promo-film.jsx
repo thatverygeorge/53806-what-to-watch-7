@@ -3,11 +3,14 @@ import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
-import filmProp from '../film-screen/film.prop';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {getPromoFilm} from '../../store/films/selectors';
+import {useHistory} from 'react-router-dom';
+import {AppRoute} from '../../const';
 
-function PromoFilm(props) {
-  const {promoFilm} = props;
+function PromoFilm() {
+  const promoFilm = useSelector(getPromoFilm);
+  const history = useHistory();
 
   return (
     <section className="film-card">
@@ -38,7 +41,7 @@ function PromoFilm(props) {
 
             <div className="film-card__buttons">
               <ButtonPlay id={promoFilm.id} />
-              <button className="btn btn--list film-card__button" type="button">
+              <button className="btn btn--list film-card__button" type="button" onClick={() => history.push(AppRoute.MY_LIST)}>
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"></use>
                 </svg>
@@ -52,13 +55,4 @@ function PromoFilm(props) {
   );
 }
 
-PromoFilm.propTypes = {
-  promoFilm: filmProp,
-};
-
-const mapStateToProps = (state) => ({
-  promoFilm: state.promoFilm,
-});
-
-export {PromoFilm};
-export default connect(mapStateToProps)(PromoFilm);
+export default PromoFilm;

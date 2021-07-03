@@ -1,32 +1,35 @@
 import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
 import Review from '../review/review';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {fetchReviews} from '../../store/api-actions';
-import {connect} from 'react-redux';
-import {ActionCreator} from '../../store/action';
-import filmProp from '../film-screen/film.prop';
+import {useDispatch, useSelector} from 'react-redux';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm, getReviews} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
 
-function FilmReviews(props) {
-  const {film, reviews, loadReviews, isDataLoaded, setIsDataLoaded} = props;
+function FilmReviews() {
+  const film = useSelector(getFilm);
+  const reviews = useSelector(getReviews);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'reviews'));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isDataLoaded) {
-      loadReviews(film.id);
+      dispatch(fetchReviews(film.id));
     }
 
     return () => {
       if (isDataLoaded) {
-        setIsDataLoaded(false);
+        dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: false}));
       }
     };
-  }, [film.id, isDataLoaded, loadReviews, setIsDataLoaded]);
+  }, [dispatch, film.id, isDataLoaded]);
 
   if (!isDataLoaded) {
     return <LoadingScreen />;
   }
 
-  if (!reviews) {
+  if (!reviews || reviews.length === 0) {
     return <p style={{ marginTop: '100px', textAlign: 'center', color: '#252525' }}>No reviews</p>;
   }
 
@@ -45,29 +48,5 @@ function FilmReviews(props) {
   );
 }
 
-FilmReviews.propTypes = {
-  film: filmProp,
-  reviews: PropTypes.arrayOf(PropTypes.object),
-  loadReviews: PropTypes.func.isRequired,
-  setIsDataLoaded: PropTypes.func.isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  film: state.film.data,
-  reviews: state.reviews.data,
-  isDataLoaded: state.reviews.isDataLoaded,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  loadReviews(id) {
-    dispatch(fetchReviews(id));
-  },
-  setIsDataLoaded(bool) {
-    dispatch(ActionCreator.setIsDataLoaded({key: 'reviews', isDataLoaded: bool}));
-  },
-});
-
-export {FilmReviews};
-export default connect(mapStateToProps, mapDispatchToProps)(FilmReviews);
+export default FilmReviews;
 

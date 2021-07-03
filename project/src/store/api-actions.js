@@ -1,10 +1,20 @@
-import {ActionCreator} from './action';
 import {APIRoute, AppRoute, AuthorizationStatus} from '../const';
+import {
+  loadFilm,
+  loadFilms,
+  loadPromoFilm,
+  loadReviews,
+  loadSimilarFilms,
+  redirectToRoute,
+  requireAuthorization,
+  logout as closeSession,
+  setIsDataLoaded
+} from './action';
 import {adaptToClient} from './adapter';
 
 export const checkAuth = () => (dispatch, _getState, api) => (
   api.get(APIRoute.LOGIN)
-    .then(() => dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH)))
+    .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
     .catch(() => {})
 );
 
@@ -16,51 +26,45 @@ export const login = ({email, password}) => (dispatch, _getState, api) => (
       localStorage.setItem('name', data.name);
       localStorage.setItem('email', data.email);
     })
-    .then(() => dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH)))
-    .then(() => dispatch(ActionCreator.redirectToRoute(AppRoute.MAIN)))
+    .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
+    .then(() => dispatch(redirectToRoute(AppRoute.MAIN)))
 );
 
 export const logout = () => (dispatch, _getState, api) => (
   api.delete(APIRoute.LOGOUT)
     .then(() => localStorage.removeItem('token'))
-    .then(() => dispatch(ActionCreator.logout()))
+    .then(() => dispatch(closeSession()))
 );
 
 export const fetchPromoFilm = () => (dispatch, _getState, api) => (
   api.get(APIRoute.PROMO)
-    .then(({data}) => dispatch(ActionCreator.loadPromoFilm(adaptToClient(data))))
+    .then(({data}) => dispatch(loadPromoFilm(adaptToClient(data))))
 );
 
 export const fetchFilms = () => (dispatch, _getState, api) => (
   api.get(APIRoute.FILMS)
-    .then(({data}) => dispatch(ActionCreator.loadFilms(data.map((film) => adaptToClient(film)))))
+    .then(({data}) => dispatch(loadFilms(data.map((film) => adaptToClient(film)))))
     .then(() => dispatch(fetchPromoFilm()))
-    .then(() => dispatch(ActionCreator.setIsDataLoaded({key: 'films', isDataLoaded: true})))
+    .then(() => dispatch(setIsDataLoaded({key: 'films', isDataLoaded: true})))
 );
 
 export const fetchFilm = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.FILMS}/${id}`)
-    .then(({data}) => dispatch(ActionCreator.loadFilm(adaptToClient(data))))
-    .then(() => dispatch(ActionCreator.setIsDataLoaded({key: 'film', isDataLoaded: true})))
-    .catch(() => dispatch(ActionCreator.setIsDataLoaded({key: 'film', isDataLoaded: true})))
+    .then(({data}) => dispatch(loadFilm(adaptToClient(data))))
+    .then(() => dispatch(setIsDataLoaded({key: 'film', isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: 'film', isDataLoaded: true})))
 );
 
 export const fetchSimilarFilms = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.FILMS}/${id}${APIRoute.SIMILAR}`)
-    .then(({data}) => dispatch(ActionCreator.loadSimilarFilms(data.map((film) => adaptToClient(film)))))
-    .then(() => dispatch(ActionCreator.setIsDataLoaded({key: 'similar', isDataLoaded: true})))
-    .catch(() => dispatch(ActionCreator.setIsDataLoaded({key: 'similar', isDataLoaded: true})))
+    .then(({data}) => dispatch(loadSimilarFilms(data.map((film) => adaptToClient(film)))))
+    .then(() => dispatch(setIsDataLoaded({key: 'similar', isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: 'similar', isDataLoaded: true})))
 );
 
 export const fetchReviews = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.REVIEWS}/${id}`)
-    .then(({data}) => dispatch(ActionCreator.loadReviews(data)))
-    .then(() => dispatch(ActionCreator.setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
-    .catch(() => dispatch(ActionCreator.setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
-);
-
-export const postReview = (id, {rating, comment}, onSuccess, onError) => (dispatch, _getState, api) => (
-  api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
-    .then(() => onSuccess())
-    .catch(() => onError())
+    .then(({data}) => dispatch(loadReviews(data)))
+    .then(() => dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
 );

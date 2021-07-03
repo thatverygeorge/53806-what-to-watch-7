@@ -1,8 +1,6 @@
-import {ActionType} from './action';
-import {AuthorizationStatus} from '../const';
+import {ActionType} from '../action';
 
 const initialState = {
-  genre: 'All genres',
   films: {
     data: [],
     isDataLoaded: false,
@@ -20,16 +18,10 @@ const initialState = {
     data: undefined,
     isDataLoaded: false,
   },
-  authorizationStatus: AuthorizationStatus.NO_AUTH,
 };
 
-export function reducer(state = initialState, action) {
+export const films = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.CHANGE_GENRE:
-      return {
-        ...state,
-        genre: action.payload,
-      };
     case ActionType.LOAD_FILMS:
       return {
         ...state,
@@ -75,17 +67,7 @@ export function reducer(state = initialState, action) {
           isDataLoaded: action.payload.isDataLoaded,
         },
       };
-    case ActionType.REQUIRED_AUTHORIZATION:
-      return {
-        ...state,
-        authorizationStatus: action.payload,
-      };
-    case ActionType.LOGOUT:
-      return {
-        ...state,
-        authorizationStatus: AuthorizationStatus.NO_AUTH,
-      };
     default:
       return state;
   }
-}
+};

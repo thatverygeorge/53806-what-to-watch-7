@@ -2,15 +2,16 @@ import React, {useState} from 'react';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {Redirect} from 'react-router-dom';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function SignInScreen(props) {
+function SignInScreen() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const {onSubmit, authorizationStatus} = props;
+  const dispatch = useDispatch();
 
   if (authorizationStatus !== AuthorizationStatus.NO_AUTH) {
     return <Redirect to={AppRoute.MAIN} />;
@@ -25,10 +26,10 @@ function SignInScreen(props) {
       const email = formData.get('user-email');
       const password = formData.get('user-password');
 
-      onSubmit({
+      dispatch(login({
         email,
         password,
-      });
+      }));
     }
   }
 
@@ -90,20 +91,4 @@ function SignInScreen(props) {
   );
 }
 
-SignInScreen.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onSubmit(authData) {
-    dispatch(login(authData));
-  },
-});
-
-export {SignInScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen);
+export default SignInScreen;

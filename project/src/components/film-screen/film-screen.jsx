@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useHistory, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
@@ -9,28 +9,33 @@ import FilmsListSimilar from '../films-list-similar/films-list-similar';
 import FilmTabs from '../film-tabs/film-tabs';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {AuthorizationStatus} from '../../const';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {ActionCreator} from '../../store/action';
+import {AppRoute, AuthorizationStatus} from '../../const';
+import {useDispatch, useSelector} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
-import filmProp from '../film-screen/film.prop';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function FilmScreen(props) {
-  const {film, isDataLoaded, loadFilm, setIsDataLoaded, authorizationStatus} = props;
+function FilmScreen() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const film = useSelector(getFilm);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const {id} = useParams();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isDataLoaded) {
-      loadFilm(id);
+      dispatch(fetchFilm(id));
     }
 
     return () => {
       if (isDataLoaded) {
-        setIsDataLoaded(false);
+        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
       }
     };
-  }, [id, isDataLoaded, loadFilm, setIsDataLoaded]);
+  }, [dispatch, id, isDataLoaded]);
 
   if (!isDataLoaded) {
     return <LoadingScreen />;
@@ -66,7 +71,7 @@ function FilmScreen(props) {
 
               <div className="film-card__buttons">
                 <ButtonPlay id={film.id} />
-                <button className="btn btn--list film-card__button" type="button">
+                <button className="btn btn--list film-card__button" type="button" onClick={() => history.push(AppRoute.MY_LIST)}>
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref="#add"></use>
                   </svg>
@@ -97,29 +102,4 @@ function FilmScreen(props) {
   );
 }
 
-FilmScreen.propTypes = {
-  film: filmProp,
-  isDataLoaded: PropTypes.bool.isRequired,
-  loadFilm: PropTypes.func.isRequired,
-  setIsDataLoaded: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  film: state.film.data,
-  similar: state.similar.data,
-  isDataLoaded: state.film.isDataLoaded,
-  authorizationStatus: state.authorizationStatus,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  loadFilm(id) {
-    dispatch(fetchFilm(id));
-  },
-  setIsDataLoaded(bool) {
-    dispatch(ActionCreator.setIsDataLoaded({key: 'film', isDataLoaded: bool}));
-  },
-});
-
-export {FilmScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(FilmScreen);
+export default FilmScreen;

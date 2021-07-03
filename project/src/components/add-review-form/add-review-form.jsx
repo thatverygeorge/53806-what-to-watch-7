@@ -1,10 +1,10 @@
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {postReview} from '../../store/api-actions';
-import {connect} from 'react-redux';
+import {createAPI} from '../../services/api';
+import { APIRoute } from '../../const';
 
 function AddReviewForm(props) {
-  const {id, sendReview} = props;
+  const {id} = props;
   const formRef = useRef();
   const [review, setReview] = useState({
     rating: 0,
@@ -12,15 +12,15 @@ function AddReviewForm(props) {
   });
   const {rating, comment} = review;
 
-  function setIsFormDisabled(bool) {
+  const setIsFormDisabled = (bool) => {
     Array.from(formRef.current.elements).forEach((element) => element.disabled = bool);
-  }
+  };
 
-  function onError() {
+  const onError = () => {
     setIsFormDisabled(false);
-  }
+  };
 
-  function onSuccess() {
+  const onSuccess = () => {
     setIsFormDisabled(false);
 
     formRef.current.reset();
@@ -29,13 +29,20 @@ function AddReviewForm(props) {
       rating: 0,
       comment: '',
     }));
-  }
+  };
+
+  const postReview = (api) => (
+    api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
+      .then(() => onSuccess())
+      .catch(() => onError())
+  );
 
   function handleSubmit(evt) {
     evt.preventDefault();
-
     setIsFormDisabled(true);
-    sendReview(id, {rating, comment}, onSuccess, onError);
+
+    const api = createAPI(() => {});
+    postReview(api, id, {rating, comment}, onSuccess, onError);
   }
 
   function handleRatingChange(evt) {
@@ -105,14 +112,6 @@ function AddReviewForm(props) {
 
 AddReviewForm.propTypes = {
   id: PropTypes.string.isRequired,
-  sendReview: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  sendReview(id, {rating, comment}, onSuccess, onError) {
-    dispatch(postReview(id, {rating, comment}, onSuccess, onError));
-  },
-});
-
-export {AddReviewForm};
-export default connect(null, mapDispatchToProps)(AddReviewForm);
+export default AddReviewForm;

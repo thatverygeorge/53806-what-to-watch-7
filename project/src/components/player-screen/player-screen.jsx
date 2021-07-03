@@ -1,50 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {AppRoute} from '../../const';
 import {useHistory, useParams} from 'react-router-dom';
 import {formatRunTimeForPlayer} from '../../utils';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {adaptToClient} from '../../store/adapter';
-import {APIRoute} from '../../const';
-import {createAPI} from '../../services/api';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchFilm} from '../../store/api-actions';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
 
 function PlayerScreen() {
+  const film = useSelector(getFilm);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const history = useHistory();
   const {id} = useParams();
-  const [filmState, setFilmState] = useState({
-    film: undefined,
-    isFetchComplete: false,
-  });
-  const {film, isFetchComplete} = filmState;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async function() {
-      const api = createAPI();
-      try {
-        const filmResponse = await api.get(`${APIRoute.FILMS}/${id}`);
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            film: adaptToClient(filmResponse.data),
-            isFetchComplete: true,
-          }
-        ));
-      } catch (error) {
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            isFetchComplete: true,
-          }
-        ));
-      }
-    })();
-  }, [id]);
-
-  if (!film) {
-    if(!isFetchComplete) {
-      return <LoadingScreen />;
+    if (!isDataLoaded) {
+      dispatch(fetchFilm(id));
     }
 
+    return () => {
+      if (isDataLoaded) {
+        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
+      }
+    };
+  }, [dispatch, id, isDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <LoadingScreen />;
+  }
+
+  if (!film || film.id.toString() !== id) {
     return <NotFoundScreen />;
   }
 
@@ -83,5 +72,6 @@ function PlayerScreen() {
     </div>
   );
 }
+
 
 export default PlayerScreen;

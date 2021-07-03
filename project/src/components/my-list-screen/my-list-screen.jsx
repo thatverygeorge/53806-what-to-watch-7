@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
 import FilmsList from '../films-list/films-list';
-import filmProp from '../film-screen/film.prop';
+import {useSelector} from 'react-redux';
+import {getFilms} from '../../store/films/selectors';
 
-function MyListScreen(props) {
-  const {films} = props;
+function MyListScreen() {
+  const films = useSelector(getFilms);
 
   return (
     <div className="user-page">
@@ -30,11 +30,5 @@ function MyListScreen(props) {
     </div>
   );
 }
-
-MyListScreen.propTypes = {
-  films: PropTypes.arrayOf(
-    filmProp,
-  ),
-};
 
 export default MyListScreen;

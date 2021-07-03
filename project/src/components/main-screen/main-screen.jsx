@@ -1,70 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 import FilmsList from '../films-list/films-list';
 import GenresList from '../genres-list/genres-list';
-import Header from '../header/header';
-import Logo from '../logo/logo';
 import Footer from '../footer/footer';
-import UserBlock from '../user-block/user-block';
-import ButtonPlay from '../button-play/button-play';
 import ButtonShowMore from '../button-show-more/button-show-more';
-import filmProp from '../film-screen/film.prop';
-import {connect} from 'react-redux';
-import {ActionCreator} from '../../store/action';
+import {useDispatch, useSelector} from 'react-redux';
 import {getFilmsByGenre} from '../../utils';
-import NotFoundScreen from '../not-found-screen/not-found-screen';
-import LoadingScreen from '../loading-screen/loading-screen';
-import {APIRoute} from '../../const';
-import {createAPI} from '../../services/api';
-import {adaptToClient} from '../../store/adapter';
+import PromoFilm from '../promo-film/promo-film';
+import {changeGenre} from '../../store/action';
+import {getFilms} from '../../store/films/selectors';
+import {getGenre} from '../../store/util/selectors';
 
 const INITIAL_FILMS_COUNT = 8;
 const ADD_FILMS_STEP = 8;
 const INITIAL_GENRE = 'All genres';
 
-function MainScreen(props) {
+function MainScreen() {
+  const films = useSelector(getFilms);
+  const genre = useSelector(getGenre);
   const [filmsCount, setFilmsCount] = useState(INITIAL_FILMS_COUNT);
-  const [promoState, setPromoState] = useState({
-    promoFilm: undefined,
-    isFetchComplete: false,
-  });
-  const {promoFilm, isFetchComplete} = promoState;
-  const {films, genre, onGenreChange} = props;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async function() {
-      const api = createAPI();
-      try {
-        const {data} = await api.get(`${APIRoute.PROMO}`);
-        setPromoState((prevState) => (
-          {
-            ...prevState,
-            promoFilm: adaptToClient(data),
-            isFetchComplete: true,
-          }
-        ));
-      } catch (error) {
-        setPromoState((prevState) => (
-          {
-            ...prevState,
-            isFetchComplete: true,
-          }
-        ));
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    onGenreChange(INITIAL_GENRE);
-  }, [onGenreChange]);
-
-  if (!promoFilm) {
-    if(!isFetchComplete) {
-      return <LoadingScreen />;
-    }
-
-    return <NotFoundScreen />;
-  }
+    dispatch(changeGenre(INITIAL_GENRE));
+  }, [dispatch]);
 
   function handleGenreChange(evt) {
     if (evt.target.tagName === 'A') {
@@ -72,7 +30,7 @@ function MainScreen(props) {
 
       if (evt.target.textContent !== genre) {
         setFilmsCount(INITIAL_FILMS_COUNT);
-        onGenreChange(evt.target.textContent);
+        dispatch(changeGenre(evt.target.textContent));
       }
     }
   }
@@ -83,45 +41,7 @@ function MainScreen(props) {
 
   return (
     <>
-      <section className="film-card">
-        <div className="film-card__bg">
-          <img src={promoFilm.backgroundImage} alt={promoFilm.name} />
-        </div>
-
-        <h1 className="visually-hidden">WTW</h1>
-
-        <Header>
-          <Logo />
-
-          <UserBlock />
-        </Header>
-
-        <div className="film-card__wrap">
-          <div className="film-card__info">
-            <div className="film-card__poster">
-              <img src={promoFilm.posterImage} alt={`${promoFilm.name} poster`} width="218" height="327" />
-            </div>
-
-            <div className="film-card__desc">
-              <h2 className="film-card__title">{promoFilm.name}</h2>
-              <p className="film-card__meta">
-                <span className="film-card__genre">{promoFilm.genre}</span>
-                <span className="film-card__year">{promoFilm.released}</span>
-              </p>
-
-              <div className="film-card__buttons">
-                <ButtonPlay film={promoFilm} />
-                <button className="btn btn--list film-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PromoFilm />
 
       <div className="page-content">
         <section className="catalog">
@@ -142,23 +62,4 @@ function MainScreen(props) {
   );
 }
 
-MainScreen.propTypes = {
-  genre: PropTypes.string.isRequired,
-  films: PropTypes.arrayOf(
-    filmProp,
-  ),
-  onGenreChange: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  genre: state.genre,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onGenreChange(genre) {
-    dispatch(ActionCreator.changeGenre(genre));
-  },
-});
-
-export {MainScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
+export default MainScreen;

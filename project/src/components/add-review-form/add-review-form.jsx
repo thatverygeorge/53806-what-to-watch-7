@@ -1,39 +1,48 @@
-/* eslint-disable no-console */
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {createAPI} from '../../services/api';
-import {APIRoute} from '../../const';
+import { APIRoute } from '../../const';
 
 function AddReviewForm(props) {
   const {id} = props;
+  const formRef = useRef();
   const [review, setReview] = useState({
     rating: 0,
     comment: '',
   });
   const {rating, comment} = review;
 
+  const setIsFormDisabled = (bool) => {
+    Array.from(formRef.current.elements).forEach((element) => element.disabled = bool);
+  };
+
+  const onError = () => {
+    setIsFormDisabled(false);
+  };
+
+  const onSuccess = () => {
+    setIsFormDisabled(false);
+
+    formRef.current.reset();
+    setReview((prevReview) => ({
+      ...prevReview,
+      rating: 0,
+      comment: '',
+    }));
+  };
+
+  const postReview = (api) => (
+    api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
+      .then(() => onSuccess())
+      .catch(() => onError())
+  );
+
   function handleSubmit(evt) {
     evt.preventDefault();
+    setIsFormDisabled(true);
 
-    Array.from(evt.target.elements).forEach((element) => element.disabled = true);
-
-    (async function() {
-      try {
-        const api = createAPI();
-        await api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment});
-
-        Array.from(evt.target.elements).forEach((element) => element.disabled = false);
-
-        evt.target.reset();
-        setReview((prevReview) => ({
-          ...prevReview,
-          rating: 0,
-          comment: '',
-        }));
-      } catch (error) {
-        Array.from(evt.target.elements).forEach((element) => element.disabled = false);
-      }
-    })();
+    const api = createAPI(() => {});
+    postReview(api, id, {rating, comment}, onSuccess, onError);
   }
 
   function handleRatingChange(evt) {
@@ -55,7 +64,7 @@ function AddReviewForm(props) {
   }
 
   return (
-    <form action="#" className="add-review__form" onSubmit={handleSubmit}>
+    <form ref={formRef} action="#" className="add-review__form" onSubmit={handleSubmit}>
       <div className="rating">
         <div className="rating__stars" onChange={handleRatingChange}>
           <input className="rating__input" id="star-10" type="radio" name="rating" value="10" />

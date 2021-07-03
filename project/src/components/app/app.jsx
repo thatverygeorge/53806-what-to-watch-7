@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import MainScreen from '../main-screen/main-screen';
@@ -11,12 +10,12 @@ import PlayerScreen from '../player-screen/player-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PrivateRoute from '../private-route/private-route';
-import filmProp from '../film-screen/film.prop';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import browserHistory from '../../browser-history';
+import {getDataLoadedStatus} from '../../store/films/selectors';
 
-function App(props) {
-  const {films, isDataLoaded} = props;
+function App() {
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'films'));
 
   if (!isDataLoaded) {
     return (
@@ -28,7 +27,7 @@ function App(props) {
     <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.MAIN}>
-          <MainScreen films={films} />
+          <MainScreen />
         </Route>
         <Route exact path={AppRoute.SIGN_IN}>
           <SignInScreen />
@@ -36,20 +35,20 @@ function App(props) {
         <PrivateRoute
           exact
           path={AppRoute.MY_LIST}
-          render={() => <MyListScreen films={films} />}
+          render={() => <MyListScreen />}
         >
         </PrivateRoute>
-        <PrivateRoute
+        <Route
           exact
           path={AppRoute.ADD_REVIEW}
-          render={() => <AddReviewScreen films={films} />}
         >
-        </PrivateRoute>
+          <AddReviewScreen />
+        </Route>
         <Route exact path={AppRoute.FILM}>
-          <FilmScreen films={films} />
+          <FilmScreen />
         </Route>
         <Route exact path={AppRoute.PLAYER}>
-          <PlayerScreen films={films} />
+          <PlayerScreen />
         </Route>
         <Route>
           <NotFoundScreen />
@@ -59,17 +58,4 @@ function App(props) {
   );
 }
 
-App.propTypes = {
-  films: PropTypes.arrayOf(
-    filmProp,
-  ),
-  isDataLoaded: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  films: state.films,
-  isDataLoaded: state.isDataLoaded,
-});
-
-export {App};
-export default connect(mapStateToProps, null)(App);
+export default App;

@@ -1,46 +1,35 @@
-import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect} from 'react';
 import Review from '../review/review';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {APIRoute} from '../../const';
-import {createAPI} from '../../services/api';
+import {fetchReviews} from '../../store/api-actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm, getReviews} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
 
-function FilmReviews(props) {
-  const {id} = props;
-  const [reviewsState, setReviewsState] = useState({
-    reviews: undefined,
-    isFetchComplete: false,
-  });
-  const {reviews, isFetchComplete} = reviewsState;
+function FilmReviews() {
+  const film = useSelector(getFilm);
+  const reviews = useSelector(getReviews);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'reviews'));
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async function() {
-      const api = createAPI();
-      try {
-        const {data} = await api.get(`${APIRoute.REVIEWS}/${id}`);
-        setReviewsState((prevState) => (
-          {
-            ...prevState,
-            reviews: data,
-            isFetchComplete: true,
-          }
-        ));
-      } catch (error) {
-        setReviewsState((prevState) => (
-          {
-            ...prevState,
-            isFetchComplete: true,
-          }
-        ));
-      }
-    })();
-  }, [id]);
-
-  if (!reviews) {
-    if(!isFetchComplete) {
-      return <LoadingScreen />;
+    if (!isDataLoaded) {
+      dispatch(fetchReviews(film.id));
     }
 
+    return () => {
+      if (isDataLoaded) {
+        dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: false}));
+      }
+    };
+  }, [dispatch, film.id, isDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <LoadingScreen />;
+  }
+
+  if (!reviews || reviews.length === 0) {
     return <p style={{ marginTop: '100px', textAlign: 'center', color: '#252525' }}>No reviews</p>;
   }
 
@@ -58,10 +47,6 @@ function FilmReviews(props) {
     </div>
   );
 }
-
-FilmReviews.propTypes = {
-  id: PropTypes.number.isRequired,
-};
 
 export default FilmReviews;
 

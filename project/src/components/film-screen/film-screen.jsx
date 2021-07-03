@@ -1,69 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {Link, useHistory, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
-import FilmsList from '../films-list/films-list';
+import FilmsListSimilar from '../films-list-similar/films-list-similar';
 import FilmTabs from '../film-tabs/film-tabs';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {APIRoute, AuthorizationStatus} from '../../const';
-import {createAPI} from '../../services/api';
-import {adaptToClient} from '../../store/adapter';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {AppRoute, AuthorizationStatus} from '../../const';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchFilm} from '../../store/api-actions';
+import {setIsDataLoaded} from '../../store/action';
+import {getFilm} from '../../store/films/selectors';
+import {getDataLoadedStatus} from '../../store/films/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function FilmScreen(props) {
-  const {authorizationStatus} = props;
-  const [filmState, setFilmState] = useState({
-    film: undefined,
-    similar: undefined,
-    isFetchComplete: false,
-  });
-  const {film, similar, isFetchComplete} = filmState;
-
+function FilmScreen() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const film = useSelector(getFilm);
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const {id} = useParams();
-  const FILMS_COUNT = 4;
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async function() {
-      const api = createAPI();
-      try {
-        const filmResponse = await api.get(`${APIRoute.FILMS}/${id}`);
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            film: adaptToClient(filmResponse.data),
-            isFetchComplete: true,
-          }
-        ));
-
-        const similarResponse = await api.get(`${APIRoute.FILMS}/${id}${APIRoute.SIMILAR}`);
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            similar: similarResponse.data.map((similarFilm) => adaptToClient(similarFilm)),
-            isFetchComplete: true,
-          }
-        ));
-      } catch (error) {
-        setFilmState((prevState) => (
-          {
-            ...prevState,
-            isFetchComplete: true,
-          }
-        ));
-      }
-    })();
-  }, [id]);
-
-  if (!film) {
-    if(!isFetchComplete) {
-      return <LoadingScreen />;
+    if (!isDataLoaded) {
+      dispatch(fetchFilm(id));
     }
 
+    return () => {
+      if (isDataLoaded) {
+        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
+      }
+    };
+  }, [dispatch, id, isDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <LoadingScreen />;
+  }
+
+  if (!film || film.id.toString() !== id) {
     return <NotFoundScreen />;
   }
 
@@ -92,8 +70,8 @@ function FilmScreen(props) {
               </p>
 
               <div className="film-card__buttons">
-                <ButtonPlay film={film} />
-                <button className="btn btn--list film-card__button" type="button">
+                <ButtonPlay id={film.id} />
+                <button className="btn btn--list film-card__button" type="button" onClick={() => history.push(AppRoute.MY_LIST)}>
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref="#add"></use>
                   </svg>
@@ -111,31 +89,17 @@ function FilmScreen(props) {
               <img src={film.posterImage} alt={`${film.name} poster`} width="218" height="327" />
             </div>
 
-            <FilmTabs film={film} id={film.id} />
+            <FilmTabs film={film} />
           </div>
         </div>
       </section>
 
       <div className="page-content">
-        {(!similar || (similar.length - 1 <= 0)) ? '' :
-          <section className="catalog catalog--like-this">
-            <h2 className="catalog__title">More like this</h2>
-
-            <FilmsList films={similar} filmIDToExclude={film.id} filmsCount={FILMS_COUNT} />
-          </section>}
+        <FilmsListSimilar filmIDToExclude={film.id}/>
         <Footer />
       </div>
     </>
   );
 }
 
-FilmScreen.propTypes = {
-  authorizationStatus: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-});
-
-export {FilmScreen};
-export default connect(mapStateToProps)(FilmScreen);
+export default FilmScreen;

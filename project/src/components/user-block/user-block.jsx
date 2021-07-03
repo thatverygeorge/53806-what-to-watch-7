@@ -1,19 +1,20 @@
 import React from 'react';
 import {Link, useHistory} from 'react-router-dom';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {logout} from '../../store/api-actions';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
-function UserBlock(props) {
+function UserBlock() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
   const history = useHistory();
-  const {authorizationStatus, onLogOut} = props;
+  const dispatch = useDispatch();
   const avatarURL = localStorage.getItem('avatar') ?? '';
 
   function handleSignOut(evt) {
     evt.preventDefault();
 
-    onLogOut();
+    dispatch(logout());
   }
 
   return authorizationStatus === AuthorizationStatus.NO_AUTH ?
@@ -36,21 +37,4 @@ function UserBlock(props) {
     );
 }
 
-UserBlock.propTypes = {
-  authorizationStatus: PropTypes.string.isRequired,
-  onLogOut: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onLogOut() {
-    dispatch(logout());
-  },
-});
-
-
-export {UserBlock};
-export default connect(mapStateToProps, mapDispatchToProps)(UserBlock);
+export default UserBlock;

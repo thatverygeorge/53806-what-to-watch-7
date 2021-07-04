@@ -1,12 +1,21 @@
 export const formatRunTimeForPlayer = (runTime) => {
-  const hours = Math.floor(runTime / 60);
-  const minutes = runTime % 60 > 9 ? runTime % 60 : `0${runTime % 60}`;
+  const duration = Math.floor(runTime);
 
-  if (hours === 0) {
-    return `${minutes}:00`;
+  let minutes = Math.floor(duration / 60);
+  let seconds = duration - minutes * 60;
+  let hours = Math.floor(minutes / 60);
+
+  minutes = minutes % 60;
+
+  hours = hours > 9 ? hours : `0${hours}`;
+  minutes = minutes > 9 ? minutes : `0${minutes}`;
+  seconds = seconds > 9 ? seconds : `0${seconds}`;
+
+  if (hours === '00') {
+    return `${minutes}:${seconds}`;
   }
 
-  return `${hours}:${minutes}:00`;
+  return `${hours}:${minutes}:${seconds}`;
 };
 
 export const formatRunTimeForFilmDetails = (runTime) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Link, useHistory} from 'react-router-dom';
 import filmProp from '../film-screen/film.prop';
-import VideoPlayer from '../video-player/video-player';
+import SmallFilmCardPlayer from '../small-film-card-player/small-film-card-player';
 
 function SmallFilmCard(props) {
   const history = useHistory();
@@ -17,7 +17,7 @@ function SmallFilmCard(props) {
       onMouseLeave={() => handleHoverChange(undefined)}
     >
       <div className="small-film-card__image">
-        {!isActive ? <img src={film.previewImage} alt={film.name} width="280" height="175" /> : <VideoPlayer film={film} />}
+        {!isActive ? <img src={film.previewImage} alt={film.name} width="280" height="175" /> : <SmallFilmCardPlayer film={film} />}
       </div>
       <h3 className="small-film-card__title">
         <Link to={`/films/${film.id}`} className="small-film-card__link">{film.name}</Link>

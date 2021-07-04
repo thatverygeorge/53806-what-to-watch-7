@@ -8,20 +8,10 @@ import FilmScreen from '../film-screen/film-screen';
 import AddReviewScreen from '../add-review-screen/add-review-screen';
 import PlayerScreen from '../player-screen/player-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
-import LoadingScreen from '../loading-screen/loading-screen';
 import PrivateRoute from '../private-route/private-route';
-import {useSelector} from 'react-redux';
 import browserHistory from '../../browser-history';
-import {getDataLoadedStatus} from '../../store/films/selectors';
 
 function App() {
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'films'));
-
-  if (!isDataLoaded) {
-    return (
-      <LoadingScreen />
-    );
-  }
 
   return (
     <BrowserRouter history={browserHistory}>
@@ -38,12 +28,12 @@ function App() {
           render={() => <MyListScreen />}
         >
         </PrivateRoute>
-        <Route
+        <PrivateRoute
           exact
           path={AppRoute.ADD_REVIEW}
+          render={() => <AddReviewScreen />}
         >
-          <AddReviewScreen />
-        </Route>
+        </PrivateRoute>
         <Route exact path={AppRoute.FILM}>
           <FilmScreen />
         </Route>

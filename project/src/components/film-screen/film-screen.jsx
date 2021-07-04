@@ -1,15 +1,16 @@
 import React, {useEffect} from 'react';
-import {Link, useHistory, useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
+import ButtonMyList from '../button-my-list/button-my-list';
 import FilmsListSimilar from '../films-list-similar/films-list-similar';
 import FilmTabs from '../film-tabs/film-tabs';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {AuthorizationStatus} from '../../const';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
 import {setIsDataLoaded} from '../../store/action';
@@ -22,7 +23,6 @@ function FilmScreen() {
   const film = useSelector(getFilm);
   const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const {id} = useParams();
-  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -71,12 +71,7 @@ function FilmScreen() {
 
               <div className="film-card__buttons">
                 <ButtonPlay id={film.id} />
-                <button className="btn btn--list film-card__button" type="button" onClick={() => history.push(AppRoute.MY_LIST)}>
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
-                </button>
+                <ButtonMyList film={film} />
                 {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`/films/${film.id}/review`} className="btn film-card__button">Add review</Link> : ''}
               </div>
             </div>

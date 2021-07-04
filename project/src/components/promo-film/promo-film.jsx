@@ -3,14 +3,12 @@ import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
+import ButtonMyList from '../button-my-list/button-my-list';
 import {useSelector} from 'react-redux';
 import {getPromoFilm} from '../../store/films/selectors';
-import {useHistory} from 'react-router-dom';
-import {AppRoute} from '../../const';
 
 function PromoFilm() {
   const promoFilm = useSelector(getPromoFilm);
-  const history = useHistory();
 
   return (
     <section className="film-card">
@@ -41,12 +39,7 @@ function PromoFilm() {
 
             <div className="film-card__buttons">
               <ButtonPlay id={promoFilm.id} />
-              <button className="btn btn--list film-card__button" type="button" onClick={() => history.push(AppRoute.MY_LIST)}>
-                <svg viewBox="0 0 19 20" width="19" height="20">
-                  <use xlinkHref="#add"></use>
-                </svg>
-                <span>My list</span>
-              </button>
+              <ButtonMyList film={promoFilm} />
             </div>
           </div>
         </div>

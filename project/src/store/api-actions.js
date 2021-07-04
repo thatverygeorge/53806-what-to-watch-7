@@ -8,7 +8,8 @@ import {
   redirectToRoute,
   requireAuthorization,
   logout as closeSession,
-  setIsDataLoaded
+  setIsDataLoaded,
+  loadFavoriteFilms
 } from './action';
 import {adaptToClient} from './adapter';
 
@@ -28,6 +29,7 @@ export const login = ({email, password}) => (dispatch, _getState, api) => (
     })
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
     .then(() => dispatch(redirectToRoute(AppRoute.MAIN)))
+    .catch(() => dispatch(redirectToRoute(AppRoute.MAIN)))
 );
 
 export const logout = () => (dispatch, _getState, api) => (
@@ -62,9 +64,29 @@ export const fetchSimilarFilms = (id) => (dispatch, _getState, api) => (
     .catch(() => dispatch(setIsDataLoaded({key: 'similar', isDataLoaded: true})))
 );
 
+export const fetchFavoriteFilms = () => (dispatch, _getState, api) => (
+  api.get(`${APIRoute.FAVORITE}`)
+    .then(({data}) => dispatch(loadFavoriteFilms(data.map((film) => adaptToClient(film)))))
+    .then(() => dispatch(setIsDataLoaded({key: 'favorite', isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: 'favorite', isDataLoaded: true})))
+);
+
 export const fetchReviews = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.REVIEWS}/${id}`)
-    .then(({data}) => dispatch(loadReviews(data)))
+    .then((response) => dispatch(loadReviews(response.data)))
     .then(() => dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
     .catch(() => dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
+);
+
+export const postReview = (id, {rating, comment}, onSuccess, onError) => (dispatch, _getState, api) => (
+  api.post(`${APIRoute.REVIEWS}/55`, {rating, comment})
+    .then(() => {
+      onSuccess();
+      dispatch(redirectToRoute(`/films/${id}`));
+    })
+    .catch(() => onError())
+);
+
+export const postFavorite = (id, status) => (dispatch, _getState, api) => (
+  api.post(`${APIRoute.FAVORITE}/${id}/${status}`)
 );

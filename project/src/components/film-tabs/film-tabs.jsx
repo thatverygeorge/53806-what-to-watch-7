@@ -10,7 +10,7 @@ function FilmTabs(props) {
   const {film} = props;
   const {tab = Tabs.OVERVIEW} = useParams();
 
-  function getComponentByActiveTab() {
+  const getComponentByActiveTab = () => {
     switch (tab) {
       case Tabs.DETAILS:
         return <FilmDetails film={film} />;
@@ -19,7 +19,7 @@ function FilmTabs(props) {
       default:
         return <FilmOverview film={film} />;
     }
-  }
+  };
 
   return (
     <div className="film-card__desc">

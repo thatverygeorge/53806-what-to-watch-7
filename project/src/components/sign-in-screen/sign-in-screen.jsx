@@ -17,7 +17,7 @@ function SignInScreen() {
     return <Redirect to={AppRoute.MAIN} />;
   }
 
-  function handleSubmit(evt) {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
 
     if (isPasswordValid) {
@@ -31,15 +31,15 @@ function SignInScreen() {
         password,
       }));
     }
-  }
+  };
 
-  function handleInput(evt) {
+  const handleInput = (evt) => {
     if (evt.target.name === 'user-password') {
       evt.target.value ?
         setIsPasswordValid(evt.target.value.split('').some((character) => character !== ' ')) :
         setIsPasswordValid(true);
     }
-  }
+  };
 
   return (
     <div className="user-page">

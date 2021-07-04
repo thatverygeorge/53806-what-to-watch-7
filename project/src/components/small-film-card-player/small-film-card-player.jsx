@@ -1,7 +1,7 @@
 import React, {useRef, useEffect} from 'react';
 import filmProp from '../film-screen/film.prop';
 
-function VideoPlayer(props) {
+function SmallFilmCardPlayer(props) {
   const playerRef = useRef(null);
   const {film} = props;
 
@@ -25,8 +25,8 @@ function VideoPlayer(props) {
   );
 }
 
-VideoPlayer.propTypes = {
+SmallFilmCardPlayer.propTypes = {
   film: filmProp,
 };
 
-export default VideoPlayer;
+export default SmallFilmCardPlayer;

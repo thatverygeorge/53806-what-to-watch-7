@@ -11,11 +11,11 @@ function UserBlock() {
   const dispatch = useDispatch();
   const avatarURL = localStorage.getItem('avatar') ?? '';
 
-  function handleSignOut(evt) {
+  const handleSignOut = (evt) => {
     evt.preventDefault();
 
     dispatch(logout());
-  }
+  };
 
   return authorizationStatus === AuthorizationStatus.NO_AUTH ?
     (

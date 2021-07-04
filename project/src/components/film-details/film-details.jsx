@@ -5,10 +5,9 @@ import {formatRunTimeForFilmDetails} from '../../utils';
 function FilmDetails(props) {
   const {film} = props;
 
-  function renderStarring(starring) {
-    return starring.map((star, index, array) =>
+  const renderStarring = (starring) =>
+    starring.map((star, index, array) =>
       index < array.length - 1 ? <React.Fragment key={star}>{`${star}, `}<br /></React.Fragment> : <React.Fragment key={star}>{star}</React.Fragment>);
-  }
 
   return (
     <div className="film-card__text film-card__row">

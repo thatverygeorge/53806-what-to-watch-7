@@ -6,19 +6,34 @@ import ButtonShowMore from '../button-show-more/button-show-more';
 import {useDispatch, useSelector} from 'react-redux';
 import {getFilmsByGenre} from '../../utils';
 import PromoFilm from '../promo-film/promo-film';
-import {changeGenre} from '../../store/action';
-import {getFilms} from '../../store/films/selectors';
+import {changeGenre, setIsDataLoaded} from '../../store/action';
+import {getDataLoadedStatus, getFilms} from '../../store/films/selectors';
 import {getGenre} from '../../store/util/selectors';
+import {fetchFilms} from '../../store/api-actions';
+import LoadingScreen from '../loading-screen/loading-screen';
 
 const INITIAL_FILMS_COUNT = 8;
 const ADD_FILMS_STEP = 8;
 const INITIAL_GENRE = 'All genres';
 
 function MainScreen() {
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'films'));
   const films = useSelector(getFilms);
   const genre = useSelector(getGenre);
   const [filmsCount, setFilmsCount] = useState(INITIAL_FILMS_COUNT);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isDataLoaded) {
+      dispatch(fetchFilms());
+    }
+
+    return () => {
+      if (isDataLoaded) {
+        dispatch(setIsDataLoaded({key: 'films', isDataLoaded: false}));
+      }
+    };
+  }, [dispatch, isDataLoaded]);
 
   useEffect(() => {
     dispatch(changeGenre(INITIAL_GENRE));
@@ -38,6 +53,10 @@ function MainScreen() {
   const handleShowMoreClick = () => {
     setFilmsCount((prevFilmsCount) => prevFilmsCount + ADD_FILMS_STEP);
   };
+
+  if (!isDataLoaded) {
+    return <LoadingScreen />;
+  }
 
   return (
     <>

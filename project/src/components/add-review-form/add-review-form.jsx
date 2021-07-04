@@ -1,9 +1,8 @@
-/* eslint-disable no-console */
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import Toast from '../toast/toast';
 import {useDispatch} from 'react-redux';
-import { postReview } from '../../store/api-actions';
+import {postReview} from '../../store/api-actions';
 
 const TOAST_SHOW_TIME = 2000;
 

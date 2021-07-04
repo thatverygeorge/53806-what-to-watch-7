@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {APIRoute, AppRoute, AuthorizationStatus} from '../const';
 import {
   loadFilm,
@@ -90,8 +89,4 @@ export const postReview = (id, {rating, comment}, onSuccess, onError) => (dispat
 
 export const postFavorite = (id, status) => (dispatch, _getState, api) => (
   api.post(`${APIRoute.FAVORITE}/${id}/${status}`)
-    .then(({data}) => {
-      // eslint-disable-next-line no-console
-      console.log(data);
-    })
 );

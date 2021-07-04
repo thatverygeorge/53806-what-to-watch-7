@@ -21,6 +21,7 @@ export const APIRoute = {
   REVIEWS: '/comments',
   SIMILAR: '/similar',
   PROMO: '/promo',
+  FAVORITE: '/favorite',
 };
 
 export const AuthorizationStatus = {

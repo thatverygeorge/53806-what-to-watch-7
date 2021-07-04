@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Redirect, Link, useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
@@ -11,11 +11,8 @@ import {fetchFilm} from '../../store/api-actions';
 import {setIsDataLoaded} from '../../store/action';
 import {getFilm} from '../../store/films/selectors';
 import {getDataLoadedStatus} from '../../store/films/selectors';
-import {getAuthorizationStatus} from '../../store/user/selectors';
-import {AppRoute, AuthorizationStatus} from '../../const';
 
 function AddReviewScreen() {
-  const authorizationStatus = useSelector(getAuthorizationStatus);
   const film = useSelector(getFilm);
   const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const {id} = useParams();
@@ -32,10 +29,6 @@ function AddReviewScreen() {
       }
     };
   }, [dispatch, id, isDataLoaded]);
-
-  if (authorizationStatus !== AuthorizationStatus.AUTH) {
-    return <Redirect to={AppRoute.SIGN_IN} />;
-  }
 
   if (!isDataLoaded) {
     return <LoadingScreen />;

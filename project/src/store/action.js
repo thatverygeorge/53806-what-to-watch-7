@@ -11,6 +11,7 @@ export const ActionType = {
   REDIRECT_TO_ROUTE: 'redirectToRoute',
   LOAD_REVIEWS: 'loadReviews',
   LOAD_SIMILAR_FILMS: 'loadSimilarFilms',
+  LOAD_FAVORITE_FILMS: 'loadFavoriteFilms',
 };
 
 export const changeGenre = createAction(ActionType.CHANGE_GENRE, (genre) => ({
@@ -35,6 +36,10 @@ export const loadSimilarFilms = createAction(ActionType.LOAD_SIMILAR_FILMS, (fil
 
 export const loadReviews = createAction(ActionType.LOAD_REVIEWS, (reviews) => ({
   payload: reviews,
+}));
+
+export const loadFavoriteFilms = createAction(ActionType.LOAD_FAVORITE_FILMS, (favorite) => ({
+  payload: favorite,
 }));
 
 export const setIsDataLoaded = createAction(ActionType.SET_IS_DATA_LOADED, (obj) => ({

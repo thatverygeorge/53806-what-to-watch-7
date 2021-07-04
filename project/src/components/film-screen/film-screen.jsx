@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Link, useHistory, useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
@@ -9,7 +9,7 @@ import FilmsListSimilar from '../films-list-similar/films-list-similar';
 import FilmTabs from '../film-tabs/film-tabs';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {AuthorizationStatus} from '../../const';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
 import {setIsDataLoaded} from '../../store/action';
@@ -22,7 +22,6 @@ function FilmScreen() {
   const film = useSelector(getFilm);
   const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
   const {id} = useParams();
-  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -71,7 +70,7 @@ function FilmScreen() {
 
               <div className="film-card__buttons">
                 <ButtonPlay id={film.id} />
-                <button className="btn btn--list film-card__button" type="button" onClick={() => history.push(AppRoute.MY_LIST)}>
+                <button className="btn btn--list film-card__button" type="button">
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref="#add"></use>
                   </svg>

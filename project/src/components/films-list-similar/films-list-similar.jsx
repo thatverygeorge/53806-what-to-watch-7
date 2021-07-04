@@ -34,9 +34,9 @@ function FilmsListSimilar(props) {
     return <LoadingScreen />;
   }
 
-  function handleHoverChange(id) {
+  const handleHoverChange = (id) => {
     setActiveFilmID(id);
-  }
+  };
 
   return (
     <section className="catalog catalog--like-this">

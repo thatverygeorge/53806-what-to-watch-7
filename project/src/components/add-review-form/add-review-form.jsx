@@ -1,7 +1,11 @@
+/* eslint-disable no-console */
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {createAPI} from '../../services/api';
-import { APIRoute } from '../../const';
+import Toast from '../toast/toast';
+import {useDispatch} from 'react-redux';
+import { postReview } from '../../store/api-actions';
+
+const TOAST_SHOW_TIME = 2000;
 
 function AddReviewForm(props) {
   const {id} = props;
@@ -11,57 +15,61 @@ function AddReviewForm(props) {
     comment: '',
   });
   const {rating, comment} = review;
+  const [toastVisibility, setToastVisbility] = useState(false);
+  const dispatch = useDispatch();
 
-  const setIsFormDisabled = (bool) => {
+  const setFormDisability = (bool) => {
     Array.from(formRef.current.elements).forEach((element) => element.disabled = bool);
   };
 
   const onError = () => {
-    setIsFormDisabled(false);
+    setToastVisbility(true);
+
+    setTimeout(() => {
+      if (formRef.current) {
+        setFormDisability(false);
+        setToastVisbility(false);
+      }
+    }, TOAST_SHOW_TIME);
   };
 
   const onSuccess = () => {
-    setIsFormDisabled(false);
+    if (formRef.current) {
+      setFormDisability(false);
 
-    formRef.current.reset();
-    setReview((prevReview) => ({
-      ...prevReview,
-      rating: 0,
-      comment: '',
-    }));
+      formRef.current.reset();
+      setReview((prevReview) => ({
+        ...prevReview,
+        rating: 0,
+        comment: '',
+      }));
+    }
   };
 
-  const postReview = (api) => (
-    api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
-      .then(() => onSuccess())
-      .catch(() => onError())
-  );
-
-  function handleSubmit(evt) {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
-    setIsFormDisabled(true);
+    setFormDisability(true);
 
-    const api = createAPI(() => {});
-    postReview(api, id, {rating, comment}, onSuccess, onError);
-  }
+    dispatch(postReview(id, {rating, comment}, onSuccess, onError));
+  };
 
-  function handleRatingChange(evt) {
+  const handleRatingChange = (evt) => {
     const {value} = evt.target;
 
     setReview((prevReview) => ({
       ...prevReview,
       rating: value,
     }));
-  }
+  };
 
-  function handleCommentChange(evt) {
+  const handleCommentChange = (evt) => {
     const {value} = evt.target;
 
     setReview((prevReview) => ({
       ...prevReview,
       comment: value,
     }));
-  }
+  };
 
   return (
     <form ref={formRef} action="#" className="add-review__form" onSubmit={handleSubmit}>
@@ -106,6 +114,8 @@ function AddReviewForm(props) {
         </div>
 
       </div>
+
+      {toastVisibility ? <Toast text={'An error occurred. Please try again.'}/> : ''}
     </form>
   );
 }

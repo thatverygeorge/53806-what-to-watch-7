@@ -1,4 +1,4 @@
-export function formatRunTimeForPlayer(runTime) {
+export const formatRunTimeForPlayer = (runTime) => {
   const hours = Math.floor(runTime / 60);
   const minutes = runTime % 60 > 9 ? runTime % 60 : `0${runTime % 60}`;
 
@@ -7,9 +7,9 @@ export function formatRunTimeForPlayer(runTime) {
   }
 
   return `${hours}:${minutes}:00`;
-}
+};
 
-export function formatRunTimeForFilmDetails(runTime) {
+export const formatRunTimeForFilmDetails = (runTime) => {
   const hours = Math.floor(runTime / 60);
   const minutes = runTime % 60 > 9 ? runTime % 60 : `0${runTime % 60}`;
 
@@ -20,9 +20,9 @@ export function formatRunTimeForFilmDetails(runTime) {
   }
 
   return `${hours}h ${minutes}m`;
-}
+};
 
-export function getRatingLevel(rating) {
+export const getRatingLevel = (rating) => {
   if (rating >= 0 && rating < 3) {
     return 'Bad';
   } else if (rating >= 3 && rating < 5) {
@@ -34,12 +34,8 @@ export function getRatingLevel(rating) {
   }
 
   return 'Awesome';
-}
+};
 
-export function excludeFilm(films, id) {
-  return films.filter((film) => film.id !== id);
-}
+export const excludeFilm = (films, id) => films.filter((film) => film.id !== id);
 
-export function getFilmsByGenre(films, genre) {
-  return genre === 'All genres' ? films : films.filter((film) => film.genre === genre);
-}
+export const getFilmsByGenre = (films, genre) => genre === 'All genres' ? films : films.filter((film) => film.genre === genre);

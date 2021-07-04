@@ -24,7 +24,7 @@ function MainScreen() {
     dispatch(changeGenre(INITIAL_GENRE));
   }, [dispatch]);
 
-  function handleGenreChange(evt) {
+  const handleGenreChange = (evt) => {
     if (evt.target.tagName === 'A') {
       evt.preventDefault();
 
@@ -33,11 +33,11 @@ function MainScreen() {
         dispatch(changeGenre(evt.target.textContent));
       }
     }
-  }
+  };
 
-  function handleShowMoreClick() {
+  const handleShowMoreClick = () => {
     setFilmsCount((prevFilmsCount) => prevFilmsCount + ADD_FILMS_STEP);
-  }
+  };
 
   return (
     <>

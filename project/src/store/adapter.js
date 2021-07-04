@@ -1,4 +1,4 @@
-export function adaptToClient(film) {
+export const adaptToClient = (film) => {
   const adaptedEvent = Object.assign(
     {},
     film,
@@ -26,9 +26,9 @@ export function adaptToClient(film) {
   delete adaptedEvent.is_favorite;
 
   return adaptedEvent;
-}
+};
 
-export function adaptToServer(film) {
+export const adaptToServer = (film) => {
   const adaptedEvent = Object.assign(
     {},
     film,
@@ -56,4 +56,4 @@ export function adaptToServer(film) {
   delete adaptedEvent.isFavorite;
 
   return adaptedEvent;
-}
+};

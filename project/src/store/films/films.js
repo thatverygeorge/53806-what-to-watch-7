@@ -1,4 +1,13 @@
-import {ActionType} from '../action';
+import {createReducer} from '@reduxjs/toolkit';
+import {
+  loadFavoriteFilms,
+  loadFilm,
+  loadFilms,
+  loadPromoFilm,
+  loadReviews,
+  loadSimilarFilms,
+  setIsDataLoaded
+} from '../action';
 
 const initialState = {
   films: {
@@ -18,56 +27,33 @@ const initialState = {
     data: undefined,
     isDataLoaded: false,
   },
+  favorite: {
+    data: undefined,
+    isDataLoaded: false,
+  },
 };
 
-export const films = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_FILMS:
-      return {
-        ...state,
-        films: {
-          ...state.films,
-          data: action.payload,
-        },
-      };
-    case ActionType.LOAD_FILM:
-      return {
-        ...state,
-        film: {
-          ...state.film,
-          data: action.payload,
-        },
-      };
-    case ActionType.LOAD_PROMO_FILM:
-      return {
-        ...state,
-        promoFilm: action.payload,
-      };
-    case ActionType.LOAD_SIMILAR_FILMS:
-      return {
-        ...state,
-        similar: {
-          ...state.similar,
-          data: action.payload,
-        },
-      };
-    case ActionType.LOAD_REVIEWS:
-      return {
-        ...state,
-        reviews: {
-          ...state.reviews,
-          data: action.payload,
-        },
-      };
-    case ActionType.SET_IS_DATA_LOADED:
-      return {
-        ...state,
-        [action.payload.key]: {
-          ...state[action.payload.key],
-          isDataLoaded: action.payload.isDataLoaded,
-        },
-      };
-    default:
-      return state;
-  }
-};
+export const films = createReducer(initialState, (builder) => {
+  builder
+    .addCase(loadFilms, (state, action) => {
+      state.films.data = action.payload;
+    })
+    .addCase(loadFilm, (state, action) => {
+      state.film.data = action.payload;
+    })
+    .addCase(loadPromoFilm, (state, action) => {
+      state.promoFilm = action.payload;
+    })
+    .addCase(loadSimilarFilms, (state, action) => {
+      state.similar.data = action.payload;
+    })
+    .addCase(loadFavoriteFilms, (state, action) => {
+      state.favorite.data = action.payload;
+    })
+    .addCase(loadReviews, (state, action) => {
+      state.reviews.data = action.payload;
+    })
+    .addCase(setIsDataLoaded, (state, action) => {
+      state[action.payload.key].isDataLoaded = action.payload.isDataLoaded;
+    });
+});

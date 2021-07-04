@@ -7,9 +7,9 @@ function FilmsList(props) {
   const {films, filmsCount} = props;
   const [activeFilmID, setActiveFilmID] = useState(undefined);
 
-  function handleHoverChange(id) {
+  const handleHoverChange = (id) => {
     setActiveFilmID(id);
-  }
+  };
 
   return (
     <div className="catalog__films-list">

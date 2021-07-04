@@ -38,12 +38,12 @@ function App() {
           render={() => <MyListScreen />}
         >
         </PrivateRoute>
-        <Route
+        <PrivateRoute
           exact
           path={AppRoute.ADD_REVIEW}
+          render={() => <AddReviewScreen />}
         >
-          <AddReviewScreen />
-        </Route>
+        </PrivateRoute>
         <Route exact path={AppRoute.FILM}>
           <FilmScreen />
         </Route>

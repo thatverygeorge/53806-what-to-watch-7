@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
@@ -55,11 +54,11 @@ function FilmScreen() {
 
           <h1 className="visually-hidden">WTW</h1>
 
-          <Header>
+          <header className="page-header film-card__head">
             <Logo />
 
             <UserBlock />
-          </Header>
+          </header>
 
           <div className="film-card__wrap">
             <div className="film-card__desc">

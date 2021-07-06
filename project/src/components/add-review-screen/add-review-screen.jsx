@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
@@ -47,7 +46,7 @@ function AddReviewScreen() {
 
         <h1 className="visually-hidden">WTW</h1>
 
-        <Header className="page-header">
+        <header className="page-header">
           <Logo />
 
           <nav className="breadcrumbs">
@@ -62,7 +61,7 @@ function AddReviewScreen() {
           </nav>
 
           <UserBlock />
-        </Header>
+        </header>
 
         <div className="film-card__poster film-card__poster--small">
           <img src={film.posterImage} alt={`${film.name} poster`} width="218" height="327" />

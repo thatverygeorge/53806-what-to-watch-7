@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
@@ -33,13 +32,13 @@ function MyListScreen() {
 
   return (
     <div className="user-page">
-      <Header className="page-header user-page__head">
+      <header className="page-header user-page__head">
         <Logo />
 
         <h1 className="page-title user-page__title">My list</h1>
 
         <UserBlock />
-      </Header>
+      </header>
 
       <section className="catalog">
         {(!films || films.length === 0) ?

@@ -10,10 +10,11 @@ import {fetchFilm} from '../../store/api-actions';
 import {setIsDataLoaded} from '../../store/action';
 import {getFilm} from '../../store/films/selectors';
 import {getDataLoadedStatus} from '../../store/films/selectors';
+import {StoreKeys} from '../../const';
 
 function AddReviewScreen() {
   const film = useSelector(getFilm);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILM));
   const {id} = useParams();
   const dispatch = useDispatch();
 
@@ -24,7 +25,7 @@ function AddReviewScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: false}));
       }
     };
   }, [dispatch, id, isDataLoaded]);

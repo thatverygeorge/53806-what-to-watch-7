@@ -8,10 +8,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getDataLoadedStatus, getFavoriteFilms} from '../../store/films/selectors';
 import {setIsDataLoaded} from '../../store/action';
 import {fetchFavoriteFilms} from '../../store/api-actions';
+import {StoreKeys} from '../../const';
 
 function MyListScreen() {
   const films = useSelector(getFavoriteFilms);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'favorite'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FAVORITE));
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ function MyListScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'favorite', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FAVORITE, isDataLoaded: false}));
       }
     };
   }, [dispatch, isDataLoaded]);

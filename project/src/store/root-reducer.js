@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {user} from './user/user';
 import {films} from './films/films';
-import {util} from './util/util';
+import {genre} from './genre/genre';
 
 export const NameSpace = {
   USER: 'USER',
@@ -12,5 +12,5 @@ export const NameSpace = {
 export default combineReducers({
   [NameSpace.USER]: user,
   [NameSpace.FILMS]: films,
-  [NameSpace.UTIL]: util,
+  [NameSpace.UTIL]: genre,
 });

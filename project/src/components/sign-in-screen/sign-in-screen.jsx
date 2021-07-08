@@ -64,6 +64,7 @@ function SignInScreen() {
                 name="user-email"
                 id="user-email"
                 required
+                data-testid="user-email"
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-email">Email address</label>
             </div>
@@ -75,6 +76,7 @@ function SignInScreen() {
                 name="user-password"
                 id="user-password"
                 required
+                data-testid="user-password"
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-password">Password</label>
             </div>

@@ -8,16 +8,17 @@ import {getFilmsByGenre} from '../../utils';
 import PromoFilm from '../promo-film/promo-film';
 import {changeGenre, setIsDataLoaded} from '../../store/action';
 import {getDataLoadedStatus, getFilms} from '../../store/films/selectors';
-import {getGenre} from '../../store/util/selectors';
+import {getGenre} from '../../store/genre/selectors';
 import {fetchFilms} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
+import {StoreKeys} from '../../const';
 
 const INITIAL_FILMS_COUNT = 8;
 const ADD_FILMS_STEP = 8;
 const INITIAL_GENRE = 'All genres';
 
 function MainScreen() {
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'films'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILMS));
   const films = useSelector(getFilms);
   const genre = useSelector(getGenre);
   const [filmsCount, setFilmsCount] = useState(INITIAL_FILMS_COUNT);
@@ -30,7 +31,7 @@ function MainScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'films', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FILMS, isDataLoaded: false}));
       }
     };
   }, [dispatch, isDataLoaded]);

@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
@@ -10,7 +9,7 @@ import FilmsListSimilar from '../films-list-similar/films-list-similar';
 import FilmTabs from '../film-tabs/film-tabs';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {AuthorizationStatus} from '../../const';
+import {AuthorizationStatus, StoreKeys} from '../../const';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
 import {setIsDataLoaded} from '../../store/action';
@@ -21,7 +20,7 @@ import {getAuthorizationStatus} from '../../store/user/selectors';
 function FilmScreen() {
   const authorizationStatus = useSelector(getAuthorizationStatus);
   const film = useSelector(getFilm);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILM));
   const {id} = useParams();
   const dispatch = useDispatch();
 
@@ -32,7 +31,7 @@ function FilmScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: false}));
       }
     };
   }, [dispatch, id, isDataLoaded]);
@@ -55,11 +54,11 @@ function FilmScreen() {
 
           <h1 className="visually-hidden">WTW</h1>
 
-          <Header>
+          <header className="page-header film-card__head">
             <Logo />
 
             <UserBlock />
-          </Header>
+          </header>
 
           <div className="film-card__wrap">
             <div className="film-card__desc">

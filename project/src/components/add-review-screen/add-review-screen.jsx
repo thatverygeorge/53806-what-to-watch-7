@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
@@ -11,10 +10,11 @@ import {fetchFilm} from '../../store/api-actions';
 import {setIsDataLoaded} from '../../store/action';
 import {getFilm} from '../../store/films/selectors';
 import {getDataLoadedStatus} from '../../store/films/selectors';
+import {StoreKeys} from '../../const';
 
 function AddReviewScreen() {
   const film = useSelector(getFilm);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILM));
   const {id} = useParams();
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ function AddReviewScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: false}));
       }
     };
   }, [dispatch, id, isDataLoaded]);
@@ -47,7 +47,7 @@ function AddReviewScreen() {
 
         <h1 className="visually-hidden">WTW</h1>
 
-        <Header className="page-header">
+        <header className="page-header">
           <Logo />
 
           <nav className="breadcrumbs">
@@ -62,7 +62,7 @@ function AddReviewScreen() {
           </nav>
 
           <UserBlock />
-        </Header>
+        </header>
 
         <div className="film-card__poster film-card__poster--small">
           <img src={film.posterImage} alt={`${film.name} poster`} width="218" height="327" />

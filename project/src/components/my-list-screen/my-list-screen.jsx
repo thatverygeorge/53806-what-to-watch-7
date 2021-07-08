@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import UserBlock from '../user-block/user-block';
@@ -9,10 +8,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getDataLoadedStatus, getFavoriteFilms} from '../../store/films/selectors';
 import {setIsDataLoaded} from '../../store/action';
 import {fetchFavoriteFilms} from '../../store/api-actions';
+import {StoreKeys} from '../../const';
 
 function MyListScreen() {
   const films = useSelector(getFavoriteFilms);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'favorite'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FAVORITE));
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function MyListScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'favorite', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FAVORITE, isDataLoaded: false}));
       }
     };
   }, [dispatch, isDataLoaded]);
@@ -33,13 +33,13 @@ function MyListScreen() {
 
   return (
     <div className="user-page">
-      <Header className="page-header user-page__head">
+      <header className="page-header user-page__head">
         <Logo />
 
         <h1 className="page-title user-page__title">My list</h1>
 
         <UserBlock />
-      </Header>
+      </header>
 
       <section className="catalog">
         {(!films || films.length === 0) ?

@@ -5,7 +5,7 @@ const initialState = {
   genre: 'All genres',
 };
 
-export const util = createReducer(initialState, (builder) => {
+export const genre = createReducer(initialState, (builder) => {
   builder
     .addCase(changeGenre, (state, action) => {
       state.genre = action.payload;

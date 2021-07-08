@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AppRoute} from '../../const';
+import {AppRoute, StoreKeys} from '../../const';
 import {useHistory, useParams} from 'react-router-dom';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
@@ -13,7 +13,7 @@ import {formatRunTimeForPlayer} from '../../utils';
 
 function PlayerScreen() {
   const film = useSelector(getFilm);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'film'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILM));
   const history = useHistory();
   const {id} = useParams();
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ function PlayerScreen() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'film', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: false}));
       }
     };
   }, [dispatch, id, isDataLoaded]);

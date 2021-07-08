@@ -1,4 +1,4 @@
-import {APIRoute, AppRoute, AuthorizationStatus} from '../const';
+import {APIRoute, AppRoute, AuthorizationStatus, StoreKeys} from '../const';
 import {
   loadFilm,
   loadFilms,
@@ -47,39 +47,39 @@ export const fetchFilms = () => (dispatch, _getState, api) => (
   api.get(APIRoute.FILMS)
     .then(({data}) => dispatch(loadFilms(data.map((film) => adaptToClient(film)))))
     .then(() => dispatch(fetchPromoFilm()))
-    .then(() => dispatch(setIsDataLoaded({key: 'films', isDataLoaded: true})))
+    .then(() => dispatch(setIsDataLoaded({key: StoreKeys.FILMS, isDataLoaded: true})))
 );
 
 export const fetchFilm = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.FILMS}/${id}`)
     .then(({data}) => dispatch(loadFilm(adaptToClient(data))))
-    .then(() => dispatch(setIsDataLoaded({key: 'film', isDataLoaded: true})))
-    .catch(() => dispatch(setIsDataLoaded({key: 'film', isDataLoaded: true})))
+    .then(() => dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: true})))
 );
 
 export const fetchSimilarFilms = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.FILMS}/${id}${APIRoute.SIMILAR}`)
     .then(({data}) => dispatch(loadSimilarFilms(data.map((film) => adaptToClient(film)))))
-    .then(() => dispatch(setIsDataLoaded({key: 'similar', isDataLoaded: true})))
-    .catch(() => dispatch(setIsDataLoaded({key: 'similar', isDataLoaded: true})))
+    .then(() => dispatch(setIsDataLoaded({key: StoreKeys.SIMILAR, isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: StoreKeys.SIMILAR, isDataLoaded: true})))
 );
 
 export const fetchFavoriteFilms = () => (dispatch, _getState, api) => (
-  api.get(`${APIRoute.FAVORITE}`)
+  api.get(APIRoute.FAVORITE)
     .then(({data}) => dispatch(loadFavoriteFilms(data.map((film) => adaptToClient(film)))))
-    .then(() => dispatch(setIsDataLoaded({key: 'favorite', isDataLoaded: true})))
-    .catch(() => dispatch(setIsDataLoaded({key: 'favorite', isDataLoaded: true})))
+    .then(() => dispatch(setIsDataLoaded({key: StoreKeys.FAVORITE, isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: StoreKeys.FAVORITE, isDataLoaded: true})))
 );
 
 export const fetchReviews = (id) => (dispatch, _getState, api) => (
   api.get(`${APIRoute.REVIEWS}/${id}`)
     .then((response) => dispatch(loadReviews(response.data)))
-    .then(() => dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
-    .catch(() => dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: true})))
+    .then(() => dispatch(setIsDataLoaded({key: StoreKeys.REVIEWS, isDataLoaded: true})))
+    .catch(() => dispatch(setIsDataLoaded({key: StoreKeys.REVIEWS, isDataLoaded: true})))
 );
 
 export const postReview = (id, {rating, comment}, onSuccess, onError) => (dispatch, _getState, api) => (
-  api.post(`${APIRoute.REVIEWS}/55`, {rating, comment})
+  api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
     .then(() => {
       onSuccess();
       dispatch(redirectToRoute(`/films/${id}`));

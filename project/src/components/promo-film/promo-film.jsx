@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import ButtonPlay from '../button-play/button-play';
@@ -18,11 +17,11 @@ function PromoFilm() {
 
       <h1 className="visually-hidden">WTW</h1>
 
-      <Header>
+      <header className="page-header film-card__head">
         <Logo />
 
         <UserBlock />
-      </Header>
+      </header>
 
       <div className="film-card__wrap">
         <div className="film-card__info">

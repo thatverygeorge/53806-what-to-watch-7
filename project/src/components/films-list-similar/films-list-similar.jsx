@@ -8,13 +8,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setIsDataLoaded} from '../../store/action';
 import {getSimilarFilms} from '../../store/films/selectors';
 import {getDataLoadedStatus} from '../../store/films/selectors';
+import {StoreKeys} from '../../const';
 
 const FILMS_COUNT = 4;
 
 function FilmsListSimilar(props) {
   const {filmIDToExclude} = props;
   const similar = useSelector(getSimilarFilms);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'similar'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.SIMILAR));
   const [activeFilmID, setActiveFilmID] = useState(undefined);
   const dispatch = useDispatch();
 
@@ -25,7 +26,7 @@ function FilmsListSimilar(props) {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'similar', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.SIMILAR, isDataLoaded: false}));
       }
     };
   }, [dispatch, filmIDToExclude, isDataLoaded]);

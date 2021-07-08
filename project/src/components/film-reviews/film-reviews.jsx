@@ -6,11 +6,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setIsDataLoaded} from '../../store/action';
 import {getFilm, getReviews} from '../../store/films/selectors';
 import {getDataLoadedStatus} from '../../store/films/selectors';
+import {StoreKeys} from '../../const';
 
 function FilmReviews() {
   const film = useSelector(getFilm);
   const reviews = useSelector(getReviews);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, 'reviews'));
+  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.REVIEWS));
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,7 +21,7 @@ function FilmReviews() {
 
     return () => {
       if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: 'reviews', isDataLoaded: false}));
+        dispatch(setIsDataLoaded({key: StoreKeys.REVIEWS, isDataLoaded: false}));
       }
     };
   }, [dispatch, film.id, isDataLoaded]);

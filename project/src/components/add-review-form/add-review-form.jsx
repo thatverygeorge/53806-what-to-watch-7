@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {postReview} from '../../store/api-actions';
 
 const TOAST_SHOW_TIME = 2000;
+const errorMessage = 'An error occurred. Please try again.';
 
 function AddReviewForm(props) {
   const {id} = props;
@@ -74,7 +75,7 @@ function AddReviewForm(props) {
     <form ref={formRef} action="#" className="add-review__form" onSubmit={handleSubmit}>
       <div className="rating">
         <div className="rating__stars" onChange={handleRatingChange}>
-          <input className="rating__input" id="star-10" type="radio" name="rating" value="10" />
+          <input className="rating__input" id="star-10" type="radio" name="rating" value="10" data-testid="star-10" />
           <label className="rating__label" htmlFor="star-10">Rating 10</label>
 
           <input className="rating__input" id="star-9" type="radio" name="rating" value="9" />
@@ -107,14 +108,22 @@ function AddReviewForm(props) {
       </div>
 
       <div className="add-review__text">
-        <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text" onChange={handleCommentChange}></textarea>
+        <textarea
+          className="add-review__textarea"
+          name="review-text"
+          id="review-text"
+          placeholder="Review text"
+          onChange={handleCommentChange}
+          data-testid="review-text"
+        >
+        </textarea>
         <div className="add-review__submit">
           <button className="add-review__btn" type="submit" disabled={!(rating !== 0 && comment.length >= 50 && comment.length <= 400)}>Post</button>
         </div>
 
       </div>
 
-      {toastVisibility ? <Toast text={'An error occurred. Please try again.'}/> : ''}
+      {toastVisibility ? <Toast text={errorMessage}/> : ''}
     </form>
   );
 }

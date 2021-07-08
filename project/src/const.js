@@ -28,3 +28,12 @@ export const AuthorizationStatus = {
   AUTH: 'AUTH',
   NO_AUTH: 'NO_AUTH',
 };
+
+export const StoreKeys = {
+  FILMS: 'films',
+  PROMO_FILM: 'promoFilm',
+  FILM: 'film',
+  REVIEWS: 'reviews',
+  SIMILAR: 'similar',
+  FAVORITE: 'favorite',
+};

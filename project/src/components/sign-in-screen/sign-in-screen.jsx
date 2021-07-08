@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Header from '../header/header';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import {useDispatch, useSelector} from 'react-redux';
@@ -43,11 +42,11 @@ function SignInScreen() {
 
   return (
     <div className="user-page">
-      <Header className="page-header user-page__head">
+      <header className="page-header user-page__head">
         <Logo />
 
         <h1 className="page-title user-page__title">Sign in</h1>
-      </Header>
+      </header>
 
       <div className="sign-in user-page__content">
         <form action="#" className="sign-in__form" onInput={handleInput} onSubmit={handleSubmit}>
@@ -65,6 +64,7 @@ function SignInScreen() {
                 name="user-email"
                 id="user-email"
                 required
+                data-testid="user-email"
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-email">Email address</label>
             </div>
@@ -76,6 +76,7 @@ function SignInScreen() {
                 name="user-password"
                 id="user-password"
                 required
+                data-testid="user-password"
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-password">Password</label>
             </div>

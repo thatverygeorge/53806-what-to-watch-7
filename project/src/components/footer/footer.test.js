@@ -15,5 +15,7 @@ describe('Component: Footer', () => {
     );
 
     expect(screen.getByText('© 2019 What to watch Ltd.')).toBeInTheDocument();
+    expect(document.querySelector('.logo')).toBeInTheDocument();
+    expect(screen.getByRole('link')).toHaveClass('logo__link', 'logo__link--light');
   });
 });

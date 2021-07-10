@@ -41,7 +41,7 @@ function FilmsListSimilar(props) {
 
   return (
     <section className="catalog catalog--like-this">
-      <h2 className="catalog__title">{(!similar || similar.length - 1 === 0) ? 'No more like this' : 'More like this'}</h2>
+      <h2 className="catalog__title">{(!similar || similar.length - 1 === 0) ? 'More like this list is empty' : 'More like this'}</h2>
 
       {(!similar || similar.length - 1 === 0) ? '' :
         <div className="catalog__films-list">

@@ -1,8 +1,9 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
-import {Router} from 'react-router-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {Route, Router, Switch} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import SmallFilmCard from './small-film-card';
+import userEvent from '@testing-library/user-event';
 
 const FILM = {
   id: 1,
@@ -27,13 +28,71 @@ const FILM = {
 describe('Component: SmallFilmCard', () => {
   it('should render correctly', () => {
     const history = createMemoryHistory();
+    const handleHoverChange = jest.fn();
 
-    render(
+    const {rerender} = render(
       <Router history={history}>
-        <SmallFilmCard film={FILM} isActive={false} handleHoverChange={() => {}} />
+        <SmallFilmCard film={FILM} isActive={false} handleHoverChange={handleHoverChange} />
       </Router>,
     );
 
-    expect(screen.getByText(`${FILM.name}`)).toBeInTheDocument();
+    const link = screen.getByRole('link');
+    expect(link).toBeInTheDocument();
+    expect(link.textContent).toEqual(`${FILM.name}`);
+
+    const image = document.querySelector('img');
+    expect(image).toBeInTheDocument();
+    expect(image.getAttribute('src')).toEqual(FILM.previewImage);
+    expect(image.getAttribute('alt')).toEqual(FILM.name);
+
+    expect(document.querySelector('.player__video')).not.toBeInTheDocument();
+
+    rerender(
+      <Router history={history}>
+        <SmallFilmCard film={FILM} isActive handleHoverChange={handleHoverChange} />
+      </Router>,
+    );
+
+    expect(document.querySelector('.player__video')).toBeInTheDocument();
+  });
+
+  it('should fire callback on mouse enter/leave', () => {
+    const history = createMemoryHistory();
+    const handleHoverChange = jest.fn();
+
+    render(
+      <Router history={history}>
+        <SmallFilmCard film={FILM} isActive handleHoverChange={handleHoverChange} />
+      </Router>,
+    );
+
+    fireEvent.mouseEnter(document.querySelector('.small-film-card__image'));
+    expect(handleHoverChange).toBeCalled();
+
+    fireEvent.mouseLeave(document.querySelector('.small-film-card__image'));
+    expect(handleHoverChange).toBeCalled();
+  });
+
+  it('should redirect to film page on click', () => {
+    const history = createMemoryHistory();
+    const handleHoverChange = jest.fn();
+    history.push('/fake');
+
+    render(
+      <Router history={history}>
+        <Switch>
+          <Route path={`/films/${FILM.id}`} exact>
+            <h1>This is film page</h1>
+          </Route>
+          <Route>
+            <SmallFilmCard film={FILM} isActive handleHoverChange={handleHoverChange} />
+          </Route>
+        </Switch>
+      </Router>,
+    );
+
+    expect(screen.queryByText('This is film page')).not.toBeInTheDocument();
+    userEvent.click((document.querySelector('.small-film-card')));
+    expect(screen.getByText('This is film page')).toBeInTheDocument();
   });
 });

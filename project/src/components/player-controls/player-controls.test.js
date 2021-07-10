@@ -3,6 +3,7 @@ import {render, screen} from '@testing-library/react';
 import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import PlayerControls from './player-controls';
+import userEvent from '@testing-library/user-event';
 
 const FILM = {
   id: 1,
@@ -28,7 +29,7 @@ describe('Component: PlayerControls', () => {
   it('should render correctly', () => {
     const history = createMemoryHistory();
 
-    render(
+    const {rerender} = render(
       <Router history={history}>
         <PlayerControls
           name={FILM.name}
@@ -43,5 +44,46 @@ describe('Component: PlayerControls', () => {
 
     expect(screen.getByText(FILM.name)).toBeInTheDocument();
     expect(screen.getByText('00:00')).toBeInTheDocument();
+    expect(document.querySelector('use').getAttributeNS('http://www.w3.org/1999/xlink', 'href')).toEqual('#play-s');
+
+    rerender(
+      <Router history={history}>
+        <PlayerControls
+          name={FILM.name}
+          isPlaying
+          duration={'00:00'}
+          currentTimeInPrecentages={'0%'}
+          handlePausePlayClick={() => {}}
+          handleFullScreenClick={() => {}}
+        />
+      </Router>,
+    );
+
+    expect(document.querySelector('use').getAttributeNS('http://www.w3.org/1999/xlink', 'href')).toEqual('#pause');
+  });
+
+  it('should fire callbacks when user clicks buttons', () => {
+    const history = createMemoryHistory();
+    const handlePausePlayClick = jest.fn();
+    const handleFullScreenClick = jest.fn();
+
+    render(
+      <Router history={history}>
+        <PlayerControls
+          name={FILM.name}
+          isPlaying={false}
+          duration={'00:00'}
+          currentTimeInPrecentages={'0%'}
+          handlePausePlayClick={handlePausePlayClick}
+          handleFullScreenClick={handleFullScreenClick}
+        />
+      </Router>,
+    );
+
+    userEvent.click((document.querySelector('.player__play')));
+    expect(handlePausePlayClick).toBeCalled();
+
+    userEvent.click((document.querySelector('.player__full-screen')));
+    expect(handleFullScreenClick).toBeCalled();
   });
 });

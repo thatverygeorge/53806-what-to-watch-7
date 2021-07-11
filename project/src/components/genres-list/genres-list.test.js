@@ -33,7 +33,7 @@ describe('Component: GenresList', () => {
 
     const {rerender} = render(
       <Router history={history}>
-        <GenresList films={[FILM]} activeGenre={FILM.genre} handleGenreChange={() => {}} />
+        <GenresList films={[FILM]} activeGenre={FILM.genre} onGenreChange={() => {}} />
       </Router>,
     );
 
@@ -44,7 +44,7 @@ describe('Component: GenresList', () => {
 
     rerender(
       <Router history={history}>
-        <GenresList films={[FILM]} activeGenre={GENRE} handleGenreChange={() => {}} />
+        <GenresList films={[FILM]} activeGenre={GENRE} onGenreChange={() => {}} />
       </Router>,
     );
 
@@ -53,16 +53,16 @@ describe('Component: GenresList', () => {
 
   it('should fire callback on genre change', () => {
     const history = createMemoryHistory();
-    const handleGenreChange = jest.fn();
+    const onGenreChange = jest.fn();
 
     render(
       <Router history={history}>
-        <GenresList films={[FILM]} activeGenre={FILM.genre} handleGenreChange={handleGenreChange} />
+        <GenresList films={[FILM]} activeGenre={FILM.genre} onGenreChange={onGenreChange} />
       </Router>,
     );
 
     userEvent.click((document.querySelector('.catalog__genres-item')));
-    expect(handleGenreChange).toBeCalled();
+    expect(onGenreChange).toBeCalled();
   });
 
 });

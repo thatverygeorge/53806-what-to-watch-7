@@ -11,7 +11,7 @@ describe('Component: ButtonShowMore', () => {
 
     render(
       <Router history={history}>
-        <ButtonShowMore handleShowMoreClick={() => {}} />
+        <ButtonShowMore onShowMoreButtonClick={() => {}} />
       </Router>,
     );
 
@@ -20,15 +20,15 @@ describe('Component: ButtonShowMore', () => {
 
   it('should fire callback on click', () => {
     const history = createMemoryHistory();
-    const handleShowMoreClick = jest.fn();
+    const onShowMoreButtonClick = jest.fn();
 
     render(
       <Router history={history}>
-        <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />
+        <ButtonShowMore onShowMoreButtonClick={onShowMoreButtonClick} />
       </Router>,
     );
 
     userEvent.click((screen.getByRole('button')));
-    expect(handleShowMoreClick).toBeCalled();
+    expect(onShowMoreButtonClick).toBeCalled();
   });
 });

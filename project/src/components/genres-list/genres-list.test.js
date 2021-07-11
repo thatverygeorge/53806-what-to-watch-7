@@ -3,6 +3,9 @@ import {render, screen} from '@testing-library/react';
 import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import GenresList from './genres-list';
+import userEvent from '@testing-library/user-event';
+
+const GENRE = 'All genres';
 
 const FILM = {
   id: 1,
@@ -28,7 +31,7 @@ describe('Component: GenresList', () => {
   it('should render correctly', () => {
     const history = createMemoryHistory();
 
-    render(
+    const {rerender} = render(
       <Router history={history}>
         <GenresList films={[FILM]} activeGenre={FILM.genre} handleGenreChange={() => {}} />
       </Router>,
@@ -36,5 +39,30 @@ describe('Component: GenresList', () => {
 
     expect(screen.getByText('All genres')).toBeInTheDocument();
     expect(screen.getByText(`${FILM.genre}`)).toBeInTheDocument();
+
+    expect(document.querySelectorAll('.catalog__genres-item')[0]).not.toHaveClass('catalog__genres-item--active');
+
+    rerender(
+      <Router history={history}>
+        <GenresList films={[FILM]} activeGenre={GENRE} handleGenreChange={() => {}} />
+      </Router>,
+    );
+
+    expect(document.querySelectorAll('.catalog__genres-item')[0]).toHaveClass('catalog__genres-item--active');
   });
+
+  it('should fire callback on genre change', () => {
+    const history = createMemoryHistory();
+    const handleGenreChange = jest.fn();
+
+    render(
+      <Router history={history}>
+        <GenresList films={[FILM]} activeGenre={FILM.genre} handleGenreChange={handleGenreChange} />
+      </Router>,
+    );
+
+    userEvent.click((document.querySelector('.catalog__genres-item')));
+    expect(handleGenreChange).toBeCalled();
+  });
+
 });

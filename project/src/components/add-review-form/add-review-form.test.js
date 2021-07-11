@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
@@ -36,10 +36,15 @@ describe('Component: AddReviewForm', () => {
     expect(screen.getByLabelText('Rating 10', { exact: true})).toBeInTheDocument();
     expect(screen.getByLabelText('Rating 5', { exact: true})).toBeInTheDocument();
     expect(screen.getByLabelText('Rating 1', { exact: true})).toBeInTheDocument();
+    expect(screen.getByRole('button').hasAttribute('disabled')).toBe(true);
 
     userEvent.click(screen.getByTestId('star-10'));
     userEvent.type(screen.getByTestId('review-text'), REVIEW.comment);
 
     expect(screen.getByDisplayValue(`${REVIEW.comment}`, 'i')).toBeInTheDocument();
+    expect(screen.getByRole('button').hasAttribute('disabled')).toBe(false);
+    expect(screen.getByRole('button').textContent).toBe('Post');
+
+    fireEvent(document.querySelector('.add-review__form'), new Event('submit'));
   });
 });

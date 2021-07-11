@@ -31,7 +31,7 @@ function FilmReviews() {
   }
 
   if (!reviews || reviews.length === 0) {
-    return <p style={{ marginTop: '100px', textAlign: 'center', color: '#252525' }}>No reviews</p>;
+    return <p style={{ marginTop: '100px', textAlign: 'center', color: '#252525' }}>Reviews list is empty</p>;
   }
 
   const reviewsColumnLeft = reviews.slice(0, reviews.length / 2 + reviews.length % 2);

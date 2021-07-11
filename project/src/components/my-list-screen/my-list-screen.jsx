@@ -43,7 +43,7 @@ function MyListScreen() {
 
       <section className="catalog">
         {(!films || films.length === 0) ?
-          <h2 className="catalog__title">No favorite films</h2> :
+          <h2 className="catalog__title">Catalog is empty</h2> :
           <h2 className="catalog__title visually-hidden">Catalog</h2>}
 
         {(!films || films.length === 0) ? '' : <FilmsList films={films} filmsCount={films.length} />}

@@ -6,15 +6,15 @@ import SmallFilmCardPlayer from '../small-film-card-player/small-film-card-playe
 
 function SmallFilmCard(props) {
   const history = useHistory();
-  const {film, isActive, handleHoverChange} = props;
+  const {film, isActive, onFilmCardHoverChange} = props;
 
   return (
     <article
       style={{cursor: 'pointer'}}
       className="small-film-card catalog__films-card"
       onClick={() => history.push(`/films/${film.id}`)}
-      onMouseEnter={() => handleHoverChange(film.id)}
-      onMouseLeave={() => handleHoverChange(undefined)}
+      onMouseEnter={() => onFilmCardHoverChange(film.id)}
+      onMouseLeave={() => onFilmCardHoverChange(undefined)}
     >
       <div className="small-film-card__image">
         {!isActive ? <img src={film.previewImage} alt={film.name} width="280" height="175" /> : <SmallFilmCardPlayer film={film} />}
@@ -29,7 +29,7 @@ function SmallFilmCard(props) {
 SmallFilmCard.propTypes = {
   film: filmProp,
   isActive: PropTypes.bool.isRequired,
-  handleHoverChange: PropTypes.func.isRequired,
+  onFilmCardHoverChange: PropTypes.func.isRequired,
 };
 
 export default SmallFilmCard;

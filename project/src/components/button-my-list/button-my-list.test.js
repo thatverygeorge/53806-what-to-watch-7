@@ -6,7 +6,7 @@ import {createMemoryHistory} from 'history';
 import ButtonMyList from './button-my-list';
 import {configureStore} from '@reduxjs/toolkit';
 import rootReducer from '../../store/root-reducer';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import {AppRoute, AuthorizationStatus} from '../../const';
 import userEvent from '@testing-library/user-event';
 
 const FAVORITE_FILM = {

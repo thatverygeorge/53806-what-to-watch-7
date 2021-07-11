@@ -40,7 +40,7 @@ function MainScreen() {
     dispatch(changeGenre(INITIAL_GENRE));
   }, [dispatch]);
 
-  const handleGenreChange = (evt) => {
+  const onGenreChange = (evt) => {
     if (evt.target.tagName === 'A') {
       evt.preventDefault();
 
@@ -51,7 +51,7 @@ function MainScreen() {
     }
   };
 
-  const handleShowMoreClick = () => {
+  const onShowMoreButtonClick = () => {
     setFilmsCount((prevFilmsCount) => prevFilmsCount + ADD_FILMS_STEP);
   };
 
@@ -67,12 +67,12 @@ function MainScreen() {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <GenresList films={films} activeGenre={genre} handleGenreChange={handleGenreChange} />
+          <GenresList films={films} activeGenre={genre} onGenreChange={onGenreChange} />
 
           <FilmsList films={getFilmsByGenre(films, genre)} filmsCount={filmsCount} />
 
           <div className="catalog__more">
-            {!(filmsCount >= getFilmsByGenre(films, genre).length) && <ButtonShowMore handleShowMoreClick={handleShowMoreClick} />}
+            {!(filmsCount >= getFilmsByGenre(films, genre).length) && <ButtonShowMore onShowMoreButtonClick={onShowMoreButtonClick} />}
           </div>
         </section>
 

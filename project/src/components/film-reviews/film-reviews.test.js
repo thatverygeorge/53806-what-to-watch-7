@@ -4,8 +4,8 @@ import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import FilmReviews from './film-reviews';
 import rootReducer from '../../store/root-reducer';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
+import {configureStore} from '@reduxjs/toolkit';
+import {Provider} from 'react-redux';
 
 const FILM = {
   id: 1,

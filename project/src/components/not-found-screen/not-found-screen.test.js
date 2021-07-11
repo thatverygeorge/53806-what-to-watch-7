@@ -3,7 +3,7 @@ import {render, screen} from '@testing-library/react';
 import {Route, Router, Switch} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import NotFoundScreen from './not-found-screen';
-import { AppRoute } from '../../const';
+import {AppRoute} from '../../const';
 import userEvent from '@testing-library/user-event';
 
 describe('Component: NotFoundScreen', () => {

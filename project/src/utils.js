@@ -1,3 +1,5 @@
+import {RatingLabels} from './const';
+
 export const formatRunTimeForPlayer = (runTime) => {
   const duration = Math.floor(runTime);
 
@@ -32,17 +34,17 @@ export const formatRunTimeForFilmDetails = (runTime) => {
 };
 
 export const getRatingLevel = (rating) => {
-  if (rating >= 0 && rating < 3) {
-    return 'Bad';
-  } else if (rating >= 3 && rating < 5) {
-    return 'Normal';
-  } else if (rating >= 5 && rating < 8) {
-    return 'Good';
-  } else if (rating >= 8 && rating < 10) {
-    return 'Very Good';
+  if (rating < 3) {
+    return RatingLabels.BAD;
+  } else if (rating < 5) {
+    return RatingLabels.NORMAL;
+  } else if (rating < 8) {
+    return RatingLabels.GOOD;
+  } else if (rating < 10) {
+    return RatingLabels.VERY_GOOD;
+  } else if (rating >= 10) {
+    return RatingLabels.AWESOME;
   }
-
-  return 'Awesome';
 };
 
 export const excludeFilm = (films, id) => films.filter((film) => film.id !== id);

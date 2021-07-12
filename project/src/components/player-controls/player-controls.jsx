@@ -7,8 +7,8 @@ function PlayerControls(props) {
     isPlaying,
     duration,
     currentTimeInPrecentages,
-    handlePausePlayClick,
-    handleFullScreenClick,
+    onPausePlayButtonClick,
+    onFullScreenButtonClick,
   } = props;
 
   return (
@@ -22,7 +22,7 @@ function PlayerControls(props) {
       </div>
 
       <div className="player__controls-row">
-        <button type="button" className="player__play" onClick={handlePausePlayClick}>
+        <button type="button" className="player__play" onClick={onPausePlayButtonClick}>
           <svg viewBox="0 0 19 19" width="19" height="19">
             <use xlinkHref={isPlaying ? '#pause' : '#play-s'}></use>
           </svg>
@@ -30,7 +30,7 @@ function PlayerControls(props) {
         </button>
         <div className="player__name">{name}</div>
 
-        <button type="button" className="player__full-screen" onClick={handleFullScreenClick}>
+        <button type="button" className="player__full-screen" onClick={onFullScreenButtonClick}>
           <svg viewBox="0 0 27 27" width="27" height="27">
             <use xlinkHref="#full-screen"></use>
           </svg>
@@ -43,11 +43,11 @@ function PlayerControls(props) {
 
 PlayerControls.propTypes = {
   name: PropTypes.string.isRequired,
-  isPlaying: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.number.isRequired,
   duration: PropTypes.string.isRequired,
   currentTimeInPrecentages: PropTypes.string.isRequired,
-  handlePausePlayClick: PropTypes.func.isRequired,
-  handleFullScreenClick: PropTypes.func.isRequired,
+  onPausePlayButtonClick: PropTypes.func.isRequired,
+  onFullScreenButtonClick: PropTypes.func.isRequired,
 };
 
 export default PlayerControls;

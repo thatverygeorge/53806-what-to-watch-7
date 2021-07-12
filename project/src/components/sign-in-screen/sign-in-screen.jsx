@@ -9,7 +9,7 @@ import {getAuthorizationStatus} from '../../store/user/selectors';
 
 function SignInScreen() {
   const authorizationStatus = useSelector(getAuthorizationStatus);
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [isError, setIsError] = useState(false);
   const dispatch = useDispatch();
 
   if (authorizationStatus !== AuthorizationStatus.NO_AUTH) {
@@ -19,25 +19,26 @@ function SignInScreen() {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
+    const formData = new FormData(evt.target);
+
+    const email = formData.get('user-email');
+    const password = formData.get('user-password');
+
+    const isPasswordValid = password.split('').some((character) => character !== ' ');
+
     if (isPasswordValid) {
-      const formData = new FormData(evt.target);
-
-      const email = formData.get('user-email');
-      const password = formData.get('user-password');
-
       dispatch(login({
         email,
         password,
-      }));
+      }))
+        .catch(() => setIsError(true));
+    } else {
+      setIsError(true);
     }
   };
 
-  const handleInput = (evt) => {
-    if (evt.target.name === 'user-password') {
-      evt.target.value ?
-        setIsPasswordValid(evt.target.value.split('').some((character) => character !== ' ')) :
-        setIsPasswordValid(true);
-    }
+  const handleInput = () => {
+    setIsError(false);
   };
 
   return (
@@ -50,11 +51,10 @@ function SignInScreen() {
 
       <div className="sign-in user-page__content">
         <form action="#" className="sign-in__form" onInput={handleInput} onSubmit={handleSubmit}>
-          {!isPasswordValid ?
+          {isError ?
             <div className="sign-in__message">
-              <p>Please enter a valid password</p>
-            </div> :
-            ''}
+              <p>An error occurred. Please check your email or password and try again.</p>
+            </div> : ''}
           <div className="sign-in__fields">
             <div className="sign-in__field">
               <input

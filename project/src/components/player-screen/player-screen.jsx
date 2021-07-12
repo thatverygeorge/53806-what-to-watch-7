@@ -1,25 +1,22 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {AppRoute, StoreKeys} from '../../const';
-import {useHistory, useParams} from 'react-router-dom';
-import NotFoundScreen from '../not-found-screen/not-found-screen';
-import LoadingScreen from '../loading-screen/loading-screen';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchFilm} from '../../store/api-actions';
-import {setIsDataLoaded} from '../../store/action';
-import {getFilm} from '../../store/films/selectors';
-import {getDataLoadedStatus} from '../../store/films/selectors';
+import React, {useRef, useState} from 'react';
+import {AppRoute} from '../../const';
+import {useHistory} from 'react-router-dom';
 import PlayerControls from '../player-controls/player-controls';
 import {formatRunTimeForPlayer} from '../../utils';
+import filmProp from '../film-screen/film.prop';
 
-function PlayerScreen() {
-  const film = useSelector(getFilm);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILM));
+const MediaState = {
+  PAUSE: 0,
+  PLAYING: 1,
+  TRANSITION: -1,
+};
+
+function PlayerScreen(props) {
+  const {film} = props;
   const history = useHistory();
-  const {id} = useParams();
-  const dispatch = useDispatch();
 
   const [playerState, setPlayerState] = useState({
-    isPlaying: false,
+    isPlaying: MediaState.PAUSE,
     isFullScreen: false,
     duration: '',
     currentTimeInPrecentages: '',
@@ -27,23 +24,38 @@ function PlayerScreen() {
   const {isPlaying, isFullScreen, duration, currentTimeInPrecentages} = playerState;
   const playerRef = useRef();
 
-  useEffect(() => {
-    if (!isDataLoaded) {
-      dispatch(fetchFilm(id));
+  const onPausePlayButtonClick = () => {
+    if (isPlaying === MediaState.PAUSE) {
+      setPlayerState((prevState) => ({
+        ...prevState,
+        isPlaying: MediaState.TRANSITION,
+      }));
+
+      playerRef.current.play()
+        .then(() => {
+          setPlayerState((prevState) => {
+            if (prevState.isPlaying === MediaState.TRANSITION) {
+              return {
+                ...prevState,
+                isPlaying: MediaState.PLAYING,
+              };
+            }
+          });
+        })
+        .catch(() => {
+          setPlayerState((prevState) => ({
+            ...prevState,
+            isPlaying: MediaState.PAUSE,
+          }));
+        });
+
+      return;
     }
 
-    return () => {
-      if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: false}));
-      }
-    };
-  }, [dispatch, id, isDataLoaded]);
-
-  const handlePausePlayClick = () => {
-    isPlaying ? playerRef.current.pause() : playerRef.current.play();
+    playerRef.current.pause();
     setPlayerState((prevState) => ({
       ...prevState,
-      isPlaying: !prevState.isPlaying,
+      isPlaying: MediaState.PAUSE,
     }));
   };
 
@@ -58,7 +70,7 @@ function PlayerScreen() {
     }
   };
 
-  const handleFullScreenClick = () => {
+  const onFullScreenButtonClick = () => {
     setPlayerState((prevState) => ({
       ...prevState,
       isFullScreen: !prevState.isFullScreen,
@@ -81,14 +93,6 @@ function PlayerScreen() {
     }));
   };
 
-  if (!isDataLoaded) {
-    return <LoadingScreen />;
-  }
-
-  if (!film || film.id.toString() !== id) {
-    return <NotFoundScreen />;
-  }
-
   return (
     <div className="player">
       <video
@@ -109,11 +113,15 @@ function PlayerScreen() {
           isPlaying={isPlaying}
           duration={duration}
           currentTimeInPrecentages={currentTimeInPrecentages}
-          handlePausePlayClick={handlePausePlayClick}
-          handleFullScreenClick={handleFullScreenClick}
+          onPausePlayButtonClick={onPausePlayButtonClick}
+          onFullScreenButtonClick={onFullScreenButtonClick}
         /> : ''}
     </div>
   );
 }
+
+PlayerScreen.propTypes = {
+  film: filmProp,
+};
 
 export default PlayerScreen;

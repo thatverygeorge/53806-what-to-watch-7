@@ -49,7 +49,7 @@ describe('Component: PlayerScreen', () => {
       <Provider store={mockStore}>
         <Router history={history}>
           <Route exact path={AppRoute.PLAYER}>
-            <PlayerScreen />
+            <PlayerScreen film={FILM} />
           </Route>
         </Router>
       </Provider>,
@@ -72,7 +72,7 @@ describe('Component: PlayerScreen', () => {
               <h1>This is main page</h1>
             </Route>
             <Route exact path={AppRoute.PLAYER}>
-              <PlayerScreen />
+              <PlayerScreen film={FILM} />
             </Route>
           </Switch>
         </Router>

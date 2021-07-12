@@ -33,11 +33,11 @@ describe('Component: PlayerControls', () => {
       <Router history={history}>
         <PlayerControls
           name={FILM.name}
-          isPlaying={false}
+          isPlaying={0}
           duration={'00:00'}
           currentTimeInPrecentages={'0%'}
-          handlePausePlayClick={() => {}}
-          handleFullScreenClick={() => {}}
+          onPausePlayButtonClick={() => {}}
+          onFullScreenButtonClick={() => {}}
         />
       </Router>,
     );
@@ -50,11 +50,11 @@ describe('Component: PlayerControls', () => {
       <Router history={history}>
         <PlayerControls
           name={FILM.name}
-          isPlaying
+          isPlaying={1}
           duration={'00:00'}
           currentTimeInPrecentages={'0%'}
-          handlePausePlayClick={() => {}}
-          handleFullScreenClick={() => {}}
+          onPausePlayButtonClick={() => {}}
+          onFullScreenButtonClick={() => {}}
         />
       </Router>,
     );
@@ -64,26 +64,26 @@ describe('Component: PlayerControls', () => {
 
   it('should fire callbacks when user clicks buttons', () => {
     const history = createMemoryHistory();
-    const handlePausePlayClick = jest.fn();
-    const handleFullScreenClick = jest.fn();
+    const onPausePlayButtonClick = jest.fn();
+    const onFullScreenButtonClick = jest.fn();
 
     render(
       <Router history={history}>
         <PlayerControls
           name={FILM.name}
-          isPlaying={false}
+          isPlaying={0}
           duration={'00:00'}
           currentTimeInPrecentages={'0%'}
-          handlePausePlayClick={handlePausePlayClick}
-          handleFullScreenClick={handleFullScreenClick}
+          onPausePlayButtonClick={onPausePlayButtonClick}
+          onFullScreenButtonClick={onFullScreenButtonClick}
         />
       </Router>,
     );
 
     userEvent.click((document.querySelector('.player__play')));
-    expect(handlePausePlayClick).toBeCalled();
+    expect(onPausePlayButtonClick).toBeCalled();
 
     userEvent.click((document.querySelector('.player__full-screen')));
-    expect(handleFullScreenClick).toBeCalled();
+    expect(onFullScreenButtonClick).toBeCalled();
   });
 });

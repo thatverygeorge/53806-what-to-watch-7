@@ -1,15 +1,15 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Toast from '../toast/toast';
 import {useDispatch} from 'react-redux';
 import {postReview} from '../../store/api-actions';
+import {redirectToRoute} from '../../store/action';
 
 const TOAST_SHOW_TIME = 2000;
 const errorMessage = 'An error occurred. Please try again.';
 
 function AddReviewForm(props) {
   const {id} = props;
-  const formRef = useRef();
   const [review, setReview] = useState({
     rating: 0,
     comment: '',
@@ -18,26 +18,26 @@ function AddReviewForm(props) {
   const [toastVisibility, setToastVisbility] = useState(false);
   const dispatch = useDispatch();
 
-  const setFormDisability = (bool) => {
-    Array.from(formRef.current.elements).forEach((element) => element.disabled = bool);
+  const setFormDisability = (form, bool) => {
+    Array.from(form.elements).forEach((element) => element.disabled = bool);
   };
 
-  const onError = () => {
-    setToastVisbility(true);
+  const onError = (form) => {
+    setToastVisbility(form, true);
 
     setTimeout(() => {
-      if (formRef.current) {
-        setFormDisability(false);
-        setToastVisbility(false);
+      if (form) {
+        setFormDisability(form, false);
+        setToastVisbility(form, false);
       }
     }, TOAST_SHOW_TIME);
   };
 
-  const onSuccess = () => {
-    if (formRef.current) {
-      setFormDisability(false);
+  const onSuccess = (form) => {
+    if (form) {
+      setFormDisability(form, false);
 
-      formRef.current.reset();
+      form.reset();
       setReview((prevReview) => ({
         ...prevReview,
         rating: 0,
@@ -48,9 +48,14 @@ function AddReviewForm(props) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    setFormDisability(true);
+    setFormDisability(evt.target, true);
 
-    dispatch(postReview(id, {rating, comment}, onSuccess, onError));
+    dispatch(postReview(id, {rating, comment}, onSuccess, onError))
+      .then(() => {
+        onSuccess(evt.target);
+        dispatch(redirectToRoute(`/films/${id}`));
+      })
+      .catch(() => onError(evt.target));
   };
 
   const handleRatingChange = (evt) => {
@@ -72,7 +77,7 @@ function AddReviewForm(props) {
   };
 
   return (
-    <form ref={formRef} action="#" className="add-review__form" onSubmit={handleSubmit}>
+    <form action="#" className="add-review__form" onSubmit={handleSubmit}>
       <div className="rating">
         <div className="rating__stars" onChange={handleRatingChange}>
           <input className="rating__input" id="star-10" type="radio" name="rating" value="10" data-testid="star-10" />
@@ -129,7 +134,7 @@ function AddReviewForm(props) {
 }
 
 AddReviewForm.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 };
 
 export default AddReviewForm;

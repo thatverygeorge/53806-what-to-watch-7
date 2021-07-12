@@ -8,7 +8,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import rootReducer from '../../store/root-reducer';
 import userEvent from '@testing-library/user-event';
 
-const fakeID = '1';
+const fakeID = 1;
 const REVIEW = {
   id: 1,
   user: {

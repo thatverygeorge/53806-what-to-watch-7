@@ -1,13 +1,13 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import {Route, Router} from 'react-router-dom';
-import {createMemoryHistory} from 'history';
-import FilmScreen from './film-screen';
-import rootReducer from '../../store/root-reducer';
+import withFilm from './with-film';
+import {AppRoute, AuthorizationStatus} from '../const';
+import rootReducer from '../store/root-reducer';
+import FilmScreen from '../components/film-screen/film-screen';
 import {configureStore} from '@reduxjs/toolkit';
+import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
-import {AppRoute, AuthorizationStatus} from '../../const';
-import userEvent from '@testing-library/user-event';
+import {Route, Router} from 'react-router-dom';
 
 const FILM = {
   id: 1,
@@ -29,7 +29,7 @@ const FILM = {
   isFavorite: true,
 };
 
-const fakeStoreAUTH = {
+const fakeStore = {
   USER: {authorizationStatus: AuthorizationStatus.AUTH},
   FILMS: {
     film: {
@@ -43,31 +43,18 @@ const fakeStoreAUTH = {
   },
 };
 
-const fakeStoreNOAUTH = {
-  USER: {authorizationStatus: AuthorizationStatus.NO_AUTH},
-  FILMS: {
-    film: {
-      data: FILM,
-      isDataLoaded: true,
-    },
-    similar: {
-      data: undefined,
-      isDataLoaded: true,
-    },
-  },
-};
-
-describe('Component: FilmScreen', () => {
-  it('should render correctly', () => {
-    let mockStore = configureStore({preloadedState: fakeStoreAUTH, reducer: rootReducer});
+describe('HOC: withFilm', () => {
+  it('component should render correctly when used with HOC', () => {
+    const FilmScreenWrapped = withFilm(FilmScreen);
+    const mockStore = configureStore({preloadedState: fakeStore, reducer: rootReducer});
     const history = createMemoryHistory();
     history.push(`/films/${FILM.id}`);
 
-    const {rerender} = render(
+    render(
       <Provider store={mockStore}>
         <Router history={history}>
           <Route path={AppRoute.FILM} exact>
-            <FilmScreen film={FILM} />
+            <FilmScreenWrapped film={FILM} />
           </Route>
         </Router>
       </Provider>,
@@ -85,42 +72,5 @@ describe('Component: FilmScreen', () => {
     expect(screen.getByText('Play', {exact: true})).toBeInTheDocument();
     expect(screen.getByText('My list', {exact: true})).toBeInTheDocument();
     expect(screen.getByText('Add review', {exact: true})).toBeInTheDocument();
-
-    mockStore = configureStore({preloadedState: fakeStoreNOAUTH, reducer: rootReducer});
-
-    rerender(
-      <Provider store={mockStore}>
-        <Router history={history}>
-          <Route path={AppRoute.FILM} exact>
-            <FilmScreen film={FILM} />
-          </Route>
-        </Router>
-      </Provider>,
-    );
-
-    expect(screen.queryByText('Add review', {exact: true})).not.toBeInTheDocument();
-  });
-
-  it('should redirect to add review page on link click', () => {
-    const mockStore = configureStore({preloadedState: fakeStoreAUTH, reducer: rootReducer});
-    const history = createMemoryHistory();
-    history.push(`/films/${FILM.id}`);
-
-    render(
-      <Provider store={mockStore}>
-        <Router history={history}>
-          <Route path={`/films/${FILM.id}/review`} exact>
-            <h1>This is add review page</h1>
-          </Route>
-          <Route path={AppRoute.FILM} exact>
-            <FilmScreen film={FILM} />
-          </Route>
-        </Router>
-      </Provider>,
-    );
-
-    expect(screen.queryByText('This is add review page', {exact: true})).not.toBeInTheDocument();
-    userEvent.click((screen.getByText('Add review', {exact: true})));
-    expect(screen.getByText('This is add review page', {exact: true})).toBeInTheDocument();
   });
 });

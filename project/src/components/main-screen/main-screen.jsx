@@ -37,6 +37,7 @@ function MainScreen() {
   }, [dispatch, isDataLoaded]);
 
   useEffect(() => {
+    //нужно ли хранить жанр в хранилище?
     dispatch(changeGenre(INITIAL_GENRE));
   }, [dispatch]);
 

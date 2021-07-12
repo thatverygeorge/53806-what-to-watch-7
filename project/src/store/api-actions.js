@@ -36,6 +36,7 @@ export const logout = () => (dispatch, _getState, api) => (
   api.delete(APIRoute.LOGOUT)
     .then(() => localStorage.removeItem('token'))
     .then(() => dispatch(closeSession()))
+    //а что, если обмен по слети с серверм не удасться?
 );
 
 export const fetchPromoFilm = () => (dispatch, _getState, api) => (
@@ -82,9 +83,12 @@ export const postReview = (id, {rating, comment}, onSuccess, onError) => (dispat
   api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
     .then(() => {
       onSuccess();
+      // решение использовать редирект на это уровне чем продиктовано?
+      // раз уж есть колбяк - то это видимо его задача правильно отреагировать.
       dispatch(redirectToRoute(`/films/${id}`));
+      return 42;//см замечания в add-review-form.jsx
     })
-    .catch(() => onError())
+    .catch(() => {onError(); return 73;})
 );
 
 export const postFavorite = (id, status) => (dispatch, _getState, api) => (

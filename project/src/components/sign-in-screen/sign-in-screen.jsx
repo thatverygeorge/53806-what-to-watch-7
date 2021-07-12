@@ -25,7 +25,13 @@ function SignInScreen() {
       const email = formData.get('user-email');
       const password = formData.get('user-password');
 
-      dispatch(login({
+      /*
+      если залогиниться с неверным мылом, то
+      {
+        "error": "child \"email\" fails because [\"email\" must be a valid email]"
+      }
+       */
+      dispatch(login({ //
         email,
         password,
       }));

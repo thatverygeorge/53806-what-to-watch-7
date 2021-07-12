@@ -32,9 +32,9 @@ export const formatRunTimeForFilmDetails = (runTime) => {
 };
 
 export const getRatingLevel = (rating) => {
-  if (rating >= 0 && rating < 3) {
-    return 'Bad';
-  } else if (rating >= 3 && rating < 5) {
+  if (rating >= 0 && rating < 3) {//отрицательный рейтинг- awesome?
+    return 'Bad';//желательно иметь на этот счет перечисление констатн RatingLabels.BAD...
+  } else if (rating >= 3 && rating < 5) {//на этот оператр программа прийти с рейтигном меньше 3 может?
     return 'Normal';
   } else if (rating >= 5 && rating < 8) {
     return 'Good';

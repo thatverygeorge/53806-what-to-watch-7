@@ -18,6 +18,7 @@ function AddReviewScreen() {
   const {id} = useParams();
   const dispatch = useDispatch();
 
+  //код повторятеся в player-screen
   useEffect(() => {
     if (!isDataLoaded) {
       dispatch(fetchFilm(id));

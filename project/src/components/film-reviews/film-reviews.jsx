@@ -19,6 +19,8 @@ function FilmReviews() {
       dispatch(fetchReviews(film.id));
     }
 
+    // а почему бы не хранить результаты запросов? если нет начать запрос, а если есть его и использовать
+    // при демонтаже компонента тогда можно не удалять из хранилища результат
     return () => {
       if (isDataLoaded) {
         dispatch(setIsDataLoaded({key: StoreKeys.REVIEWS, isDataLoaded: false}));

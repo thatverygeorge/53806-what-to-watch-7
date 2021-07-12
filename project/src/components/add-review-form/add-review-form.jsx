@@ -50,7 +50,15 @@ function AddReviewForm(props) {
     evt.preventDefault();
     setFormDisability(true);
 
-    dispatch(postReview(id, {rating, comment}, onSuccess, onError));
+    const r1 = dispatch(postReview(id, {rating, comment}, onSuccess, onError));
+    // r1 Это промис, использовать следует его а не callbacks
+    // и тогда не нужно брать formRef
+    r1.then((r2)=>{
+      /*eslint no-console:off */
+      console.log({r2, r1});
+    }).catch((e1)=>{
+      console.log({e1,r1});
+    });
   };
 
   const handleRatingChange = (evt) => {

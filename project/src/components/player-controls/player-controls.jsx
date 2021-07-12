@@ -43,7 +43,7 @@ function PlayerControls(props) {
 
 PlayerControls.propTypes = {
   name: PropTypes.string.isRequired,
-  isPlaying: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.number.isRequired,
   duration: PropTypes.string.isRequired,
   currentTimeInPrecentages: PropTypes.string.isRequired,
   handlePausePlayClick: PropTypes.func.isRequired,

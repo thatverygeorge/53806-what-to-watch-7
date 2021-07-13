@@ -19,9 +19,9 @@ function PlayerScreen(props) {
     isPlaying: MediaState.PAUSE,
     isFullScreen: false,
     duration: '',
-    currentTimeInPrecentages: '',
+    currentTimeInPercentages: '',
   });
-  const {isPlaying, isFullScreen, duration, currentTimeInPrecentages} = playerState;
+  const {isPlaying, isFullScreen, duration, currentTimeInPercentages} = playerState;
   const playerRef = useRef();
 
   const onPausePlayButtonClick = () => {
@@ -82,7 +82,7 @@ function PlayerScreen(props) {
   const handleTimeUpdate = () => {
     setPlayerState((prevState) => ({
       ...prevState,
-      currentTimeInPrecentages: `${playerRef.current.currentTime * 100 / playerRef.current.duration}%`,
+      currentTimeInPercentages: `${playerRef.current.currentTime * 100 / playerRef.current.duration}%`,
     }));
   };
 
@@ -112,7 +112,7 @@ function PlayerScreen(props) {
           name={film.name}
           isPlaying={isPlaying}
           duration={duration}
-          currentTimeInPrecentages={currentTimeInPrecentages}
+          currentTimeInPercentages={currentTimeInPercentages}
           onPausePlayButtonClick={onPausePlayButtonClick}
           onFullScreenButtonClick={onFullScreenButtonClick}
         /> : ''}

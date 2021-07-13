@@ -1,6 +1,8 @@
 import React, {useRef, useEffect} from 'react';
 import filmProp from '../film-screen/film.prop';
 
+const PLAY_TIMEOUT = 1000;
+
 function SmallFilmCardPlayer(props) {
   const playerRef = useRef(null);
   const {film} = props;
@@ -8,7 +10,7 @@ function SmallFilmCardPlayer(props) {
   useEffect(() => {
     const timer = setTimeout(() => {
       playerRef.current.play();
-    }, 1000);
+    }, PLAY_TIMEOUT);
     return () => clearTimeout(timer);
   }, []);
 

@@ -6,7 +6,7 @@ function PlayerControls(props) {
     name,
     isPlaying,
     duration,
-    currentTimeInPrecentages,
+    currentTimeInPercentages,
     onPausePlayButtonClick,
     onFullScreenButtonClick,
   } = props;
@@ -16,7 +16,7 @@ function PlayerControls(props) {
       <div className="player__controls-row">
         <div className="player__time">
           <progress className="player__progress" value="0" max="100"></progress>
-          <div className="player__toggler" style={{ left: `${currentTimeInPrecentages}` }}>Toggler</div>
+          <div className="player__toggler" style={{ left: `${currentTimeInPercentages}` }}>Toggler</div>
         </div>
         <div className="player__time-value">{duration}</div>
       </div>
@@ -45,7 +45,7 @@ PlayerControls.propTypes = {
   name: PropTypes.string.isRequired,
   isPlaying: PropTypes.number.isRequired,
   duration: PropTypes.string.isRequired,
-  currentTimeInPrecentages: PropTypes.string.isRequired,
+  currentTimeInPercentages: PropTypes.string.isRequired,
   onPausePlayButtonClick: PropTypes.func.isRequired,
   onFullScreenButtonClick: PropTypes.func.isRequired,
 };

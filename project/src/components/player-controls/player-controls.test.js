@@ -35,7 +35,7 @@ describe('Component: PlayerControls', () => {
           name={FILM.name}
           isPlaying={0}
           duration={'00:00'}
-          currentTimeInPrecentages={'0%'}
+          currentTimeInPercentages={'0%'}
           onPausePlayButtonClick={() => {}}
           onFullScreenButtonClick={() => {}}
         />
@@ -52,7 +52,7 @@ describe('Component: PlayerControls', () => {
           name={FILM.name}
           isPlaying={1}
           duration={'00:00'}
-          currentTimeInPrecentages={'0%'}
+          currentTimeInPercentages={'0%'}
           onPausePlayButtonClick={() => {}}
           onFullScreenButtonClick={() => {}}
         />
@@ -73,7 +73,7 @@ describe('Component: PlayerControls', () => {
           name={FILM.name}
           isPlaying={0}
           duration={'00:00'}
-          currentTimeInPrecentages={'0%'}
+          currentTimeInPercentages={'0%'}
           onPausePlayButtonClick={onPausePlayButtonClick}
           onFullScreenButtonClick={onFullScreenButtonClick}
         />

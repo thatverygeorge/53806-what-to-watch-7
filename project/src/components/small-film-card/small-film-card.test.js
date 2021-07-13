@@ -28,11 +28,11 @@ const FILM = {
 describe('Component: SmallFilmCard', () => {
   it('should render correctly', () => {
     const history = createMemoryHistory();
-    const handleHoverChange = jest.fn();
+    const onFilmCardHoverChange = jest.fn();
 
     const {rerender} = render(
       <Router history={history}>
-        <SmallFilmCard film={FILM} isActive={false} handleHoverChange={handleHoverChange} />
+        <SmallFilmCard film={FILM} isActive={false} onFilmCardHoverChange={onFilmCardHoverChange} />
       </Router>,
     );
 
@@ -49,7 +49,7 @@ describe('Component: SmallFilmCard', () => {
 
     rerender(
       <Router history={history}>
-        <SmallFilmCard film={FILM} isActive handleHoverChange={handleHoverChange} />
+        <SmallFilmCard film={FILM} isActive onFilmCardHoverChange={onFilmCardHoverChange} />
       </Router>,
     );
 
@@ -58,24 +58,24 @@ describe('Component: SmallFilmCard', () => {
 
   it('should fire callback on mouse enter/leave', () => {
     const history = createMemoryHistory();
-    const handleHoverChange = jest.fn();
+    const onFilmCardHoverChange = jest.fn();
 
     render(
       <Router history={history}>
-        <SmallFilmCard film={FILM} isActive handleHoverChange={handleHoverChange} />
+        <SmallFilmCard film={FILM} isActive onFilmCardHoverChange={onFilmCardHoverChange} />
       </Router>,
     );
 
     fireEvent.mouseEnter(document.querySelector('.small-film-card__image'));
-    expect(handleHoverChange).toBeCalled();
+    expect(onFilmCardHoverChange).toBeCalled();
 
     fireEvent.mouseLeave(document.querySelector('.small-film-card__image'));
-    expect(handleHoverChange).toBeCalled();
+    expect(onFilmCardHoverChange).toBeCalled();
   });
 
   it('should redirect to film page on click', () => {
     const history = createMemoryHistory();
-    const handleHoverChange = jest.fn();
+    const onFilmCardHoverChange = jest.fn();
     history.push('/fake');
 
     render(
@@ -85,7 +85,7 @@ describe('Component: SmallFilmCard', () => {
             <h1>This is film page</h1>
           </Route>
           <Route>
-            <SmallFilmCard film={FILM} isActive handleHoverChange={handleHoverChange} />
+            <SmallFilmCard film={FILM} isActive onFilmCardHoverChange={onFilmCardHoverChange} />
           </Route>
         </Switch>
       </Router>,

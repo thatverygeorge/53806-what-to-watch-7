@@ -37,3 +37,11 @@ export const StoreKeys = {
   SIMILAR: 'similar',
   FAVORITE: 'favorite',
 };
+
+export const RatingLabels = {
+  BAD: 'Bad',
+  NORMAL: 'Normal',
+  GOOD: 'Good',
+  VERY_GOOD: 'Very Good',
+  AWESOME: 'Awesome',
+};

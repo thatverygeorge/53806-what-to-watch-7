@@ -257,15 +257,7 @@ describe('Async actions', () => {
       .onPost(`${APIRoute.REVIEWS}/${fakeID}`, fakeReview)
       .reply(200, [{fake: true}]);
 
-    return reviewLoader(dispatch, () => {}, api)
-      .then(() => {
-        expect(dispatch).toHaveBeenCalledTimes(1);
-
-        expect(dispatch).toHaveBeenNthCalledWith(1, {
-          type: ActionType.REDIRECT_TO_ROUTE,
-          payload: `/films/${fakeID}`,
-        });
-      });
+    return reviewLoader(dispatch, () => {}, api);
   });
 
   it('should make a correct API call to POST /favorite/:film_id/:status', () => {

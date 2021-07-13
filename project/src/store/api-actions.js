@@ -29,13 +29,16 @@ export const login = ({email, password}) => (dispatch, _getState, api) => (
     })
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
     .then(() => dispatch(redirectToRoute(AppRoute.MAIN)))
-    .catch(() => dispatch(redirectToRoute(AppRoute.MAIN)))
 );
 
 export const logout = () => (dispatch, _getState, api) => (
   api.delete(APIRoute.LOGOUT)
     .then(() => localStorage.removeItem('token'))
     .then(() => dispatch(closeSession()))
+    .catch(() => {
+      localStorage.removeItem('token');
+      dispatch(closeSession());
+    })
 );
 
 export const fetchPromoFilm = () => (dispatch, _getState, api) => (
@@ -78,13 +81,8 @@ export const fetchReviews = (id) => (dispatch, _getState, api) => (
     .catch(() => dispatch(setIsDataLoaded({key: StoreKeys.REVIEWS, isDataLoaded: true})))
 );
 
-export const postReview = (id, {rating, comment}, onSuccess, onError) => (dispatch, _getState, api) => (
+export const postReview = (id, {rating, comment}) => (dispatch, _getState, api) => (
   api.post(`${APIRoute.REVIEWS}/${id}`, {rating, comment})
-    .then(() => {
-      onSuccess();
-      dispatch(redirectToRoute(`/films/${id}`));
-    })
-    .catch(() => onError())
 );
 
 export const postFavorite = (id, status) => (dispatch, _getState, api) => (

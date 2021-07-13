@@ -49,7 +49,7 @@ describe('Component: AddReviewScreen', () => {
       <Provider store={mockStore}>
         <Router history={history}>
           <Route path={AppRoute.ADD_REVIEW} exact>
-            <AddReviewScreen />
+            <AddReviewScreen film={FILM} />
           </Route>
         </Router>
       </Provider>,
@@ -81,7 +81,7 @@ describe('Component: AddReviewScreen', () => {
             <h1>This is film page</h1>
           </Route>
           <Route path={AppRoute.ADD_REVIEW} exact>
-            <AddReviewScreen />
+            <AddReviewScreen film={FILM} />
           </Route>
         </Router>
       </Provider>,

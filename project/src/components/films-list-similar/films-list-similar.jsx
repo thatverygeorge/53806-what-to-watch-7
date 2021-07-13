@@ -35,7 +35,7 @@ function FilmsListSimilar(props) {
     return <LoadingScreen />;
   }
 
-  const handleHoverChange = (id) => {
+  const onFilmCardHoverChange = (id) => {
     setActiveFilmID(id);
   };
 
@@ -50,7 +50,7 @@ function FilmsListSimilar(props) {
               key={film.id}
               film={film}
               isActive={activeFilmID === film.id}
-              handleHoverChange={handleHoverChange}
+              onFilmCardHoverChange={onFilmCardHoverChange}
             />))}
         </div>}
     </section>

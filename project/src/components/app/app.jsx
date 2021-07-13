@@ -9,6 +9,11 @@ import AddReviewScreen from '../add-review-screen/add-review-screen';
 import PlayerScreen from '../player-screen/player-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
+import withFilm from '../../hocs/with-film';
+
+const FilmScreenWrapped = withFilm(FilmScreen);
+const AddReviewScreenWrapped = withFilm(AddReviewScreen);
+const PlayerScreenWrapped = withFilm(PlayerScreen);
 
 function App() {
   return (
@@ -28,14 +33,14 @@ function App() {
       <PrivateRoute
         exact
         path={AppRoute.ADD_REVIEW}
-        render={() => <AddReviewScreen />}
+        render={() => <AddReviewScreenWrapped />}
       >
       </PrivateRoute>
       <Route exact path={AppRoute.FILM}>
-        <FilmScreen />
+        <FilmScreenWrapped />
       </Route>
       <Route exact path={AppRoute.PLAYER}>
-        <PlayerScreen />
+        <PlayerScreenWrapped />
       </Route>
       <Route>
         <NotFoundScreen />

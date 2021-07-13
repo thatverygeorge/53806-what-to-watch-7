@@ -7,7 +7,7 @@ function FilmsList(props) {
   const {films, filmsCount} = props;
   const [activeFilmID, setActiveFilmID] = useState(undefined);
 
-  const handleHoverChange = (id) => {
+  const onFilmCardHoverChange = (id) => {
     setActiveFilmID(id);
   };
 
@@ -18,7 +18,7 @@ function FilmsList(props) {
           key={film.id}
           film={film}
           isActive={activeFilmID === film.id}
-          handleHoverChange={handleHoverChange}
+          onFilmCardHoverChange={onFilmCardHoverChange}
         />))}
     </div>
   );

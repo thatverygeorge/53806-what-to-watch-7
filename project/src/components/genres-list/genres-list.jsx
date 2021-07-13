@@ -5,12 +5,12 @@ import filmProp from '../film-screen/film.prop';
 import {AppRoute} from '../../const';
 
 function GenresList(props) {
-  const {films, activeGenre, handleGenreChange} = props;
+  const {films, activeGenre, onGenreChange} = props;
 
   const genres = new Set(films.map((film) => film.genre));
 
   return (
-    <ul className="catalog__genres-list" onClick={handleGenreChange}>
+    <ul className="catalog__genres-list" onClick={onGenreChange}>
       <li className={`catalog__genres-item ${activeGenre === 'All genres' ? 'catalog__genres-item--active' : ''}`}>
         <Link to={AppRoute.MAIN} className="catalog__genres-link">All genres</Link>
       </li>
@@ -29,7 +29,7 @@ GenresList.propTypes = {
     filmProp,
   ),
   activeGenre: PropTypes.string.isRequired,
-  handleGenreChange: PropTypes.func.isRequired,
+  onGenreChange: PropTypes.func.isRequired,
 };
 
 export default GenresList;

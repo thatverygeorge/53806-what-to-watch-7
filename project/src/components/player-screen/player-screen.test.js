@@ -6,7 +6,7 @@ import {createMemoryHistory} from 'history';
 import PlayerScreen from './player-screen';
 import {configureStore} from '@reduxjs/toolkit';
 import rootReducer from '../../store/root-reducer';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import {AppRoute, AuthorizationStatus} from '../../const';
 import userEvent from '@testing-library/user-event';
 
 const FILM = {
@@ -49,7 +49,7 @@ describe('Component: PlayerScreen', () => {
       <Provider store={mockStore}>
         <Router history={history}>
           <Route exact path={AppRoute.PLAYER}>
-            <PlayerScreen />
+            <PlayerScreen film={FILM} />
           </Route>
         </Router>
       </Provider>,
@@ -72,7 +72,7 @@ describe('Component: PlayerScreen', () => {
               <h1>This is main page</h1>
             </Route>
             <Route exact path={AppRoute.PLAYER}>
-              <PlayerScreen />
+              <PlayerScreen film={FILM} />
             </Route>
           </Switch>
         </Router>

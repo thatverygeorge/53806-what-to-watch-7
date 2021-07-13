@@ -1,17 +1,17 @@
 import {createAction} from '@reduxjs/toolkit';
 
 export const ActionType = {
-  CHANGE_GENRE: 'changeGenre',
-  LOAD_FILMS: 'loadFilms',
-  LOAD_FILM: 'loadFilm',
-  LOAD_PROMO_FILM: 'loadPromoFilm',
-  SET_IS_DATA_LOADED: 'setIsDataLoaded',
-  REQUIRED_AUTHORIZATION: 'requiredAuthorization',
-  LOGOUT: 'logout',
-  REDIRECT_TO_ROUTE: 'redirectToRoute',
-  LOAD_REVIEWS: 'loadReviews',
-  LOAD_SIMILAR_FILMS: 'loadSimilarFilms',
-  LOAD_FAVORITE_FILMS: 'loadFavoriteFilms',
+  CHANGE_GENRE: 'data/changeGenre',
+  LOAD_FILMS: 'data/loadFilms',
+  LOAD_FILM: 'data/loadFilm',
+  LOAD_PROMO_FILM: 'data/loadPromoFilm',
+  SET_IS_DATA_LOADED: 'data/setIsDataLoaded',
+  REQUIRED_AUTHORIZATION: 'user/requiredAuthorization',
+  LOGOUT: 'user/logout',
+  REDIRECT_TO_ROUTE: 'app/redirectToRoute',
+  LOAD_REVIEWS: 'data/loadReviews',
+  LOAD_SIMILAR_FILMS: 'data/loadSimilarFilms',
+  LOAD_FAVORITE_FILMS: 'data/loadFavoriteFilms',
 };
 
 export const changeGenre = createAction(ActionType.CHANGE_GENRE, (genre) => ({

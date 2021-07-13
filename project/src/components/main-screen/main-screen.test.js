@@ -4,9 +4,9 @@ import {Route, Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import MainScreen from './main-screen';
 import rootReducer from '../../store/root-reducer';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import {configureStore} from '@reduxjs/toolkit';
+import {Provider} from 'react-redux';
+import {AppRoute, AuthorizationStatus} from '../../const';
 
 const GENRE = 'All genres';
 

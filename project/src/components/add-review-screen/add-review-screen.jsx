@@ -1,42 +1,12 @@
-import React, {useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React from 'react';
+import {Link} from 'react-router-dom';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import AddReviewForm from '../add-review-form/add-review-form';
-import NotFoundScreen from '../not-found-screen/not-found-screen';
-import LoadingScreen from '../loading-screen/loading-screen';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchFilm} from '../../store/api-actions';
-import {setIsDataLoaded} from '../../store/action';
-import {getFilm} from '../../store/films/selectors';
-import {getDataLoadedStatus} from '../../store/films/selectors';
-import {StoreKeys} from '../../const';
+import filmProp from '../film-screen/film.prop';
 
-function AddReviewScreen() {
-  const film = useSelector(getFilm);
-  const isDataLoaded = useSelector((state) => getDataLoadedStatus(state, StoreKeys.FILM));
-  const {id} = useParams();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!isDataLoaded) {
-      dispatch(fetchFilm(id));
-    }
-
-    return () => {
-      if (isDataLoaded) {
-        dispatch(setIsDataLoaded({key: StoreKeys.FILM, isDataLoaded: false}));
-      }
-    };
-  }, [dispatch, id, isDataLoaded]);
-
-  if (!isDataLoaded) {
-    return <LoadingScreen />;
-  }
-
-  if (!film || film.id.toString() !== id) {
-    return <NotFoundScreen />;
-  }
+function AddReviewScreen(props) {
+  const {film} = props;
 
   return (
     <section className="film-card film-card--full">
@@ -70,11 +40,15 @@ function AddReviewScreen() {
       </div>
 
       <div className="add-review">
-        <AddReviewForm id={id} />
+        <AddReviewForm id={film.id} />
       </div>
 
     </section>
   );
 }
+
+AddReviewScreen.propTypes = {
+  film: filmProp,
+};
 
 export default AddReviewScreen;

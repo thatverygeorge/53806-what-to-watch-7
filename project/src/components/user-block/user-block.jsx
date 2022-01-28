@@ -9,7 +9,7 @@ function UserBlock() {
   const authorizationStatus = useSelector(getAuthorizationStatus);
   const history = useHistory();
   const dispatch = useDispatch();
-  const avatarURL = localStorage.getItem('avatar') ?? '';
+  const avatarURL = localStorage.getItem('avatar');
 
   const handleSignOut = (evt) => {
     evt.preventDefault();
@@ -27,7 +27,7 @@ function UserBlock() {
       <ul className="user-block">
         <li className="user-block__item">
           <div className="user-block__avatar" onClick={() => history.push(AppRoute.MY_LIST)}>
-            <img src={avatarURL !== '' ? avatarURL: 'img/avatar.jpg'} alt="User avatar" width="63" height="63" />
+            <img src={avatarURL ? avatarURL : 'img/avatar.jpg'} alt="User avatar" width="63" height="63" />
           </div>
         </li>
         <li className="user-block__item">

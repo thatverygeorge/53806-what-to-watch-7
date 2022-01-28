@@ -9,7 +9,7 @@ function SmallFilmCardPlayer(props) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      playerRef.current.play();
+      playerRef.current.play().catch(() => {});
     }, PLAY_TIMEOUT);
     return () => clearTimeout(timer);
   }, []);

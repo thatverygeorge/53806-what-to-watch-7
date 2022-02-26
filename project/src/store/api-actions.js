@@ -23,7 +23,7 @@ export const login = ({email, password}) => (dispatch, _getState, api) => (
   api.post(APIRoute.LOGIN, {email, password})
     .then(({data}) => {
       localStorage.setItem('token', data.token);
-      localStorage.setItem('avatar', data.avatarUrl);
+      localStorage.setItem('avatar', data.avatar_url);
       localStorage.setItem('name', data.name);
       localStorage.setItem('email', data.email);
     })
